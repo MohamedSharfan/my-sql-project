@@ -43,11 +43,3 @@ Language: MySQL
 Concepts:
 
 DDLC (Database Development Life Cycle)
-
-DDL (CREATE, ALTER, DROP)
-
-DML (INSERT, UPDATE, DELETE, SELECT)
-
-DCL (GRANT, REVOKE)
-
-TCL (COMMIT, ROLLBACK)
