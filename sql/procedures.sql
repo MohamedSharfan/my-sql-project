@@ -90,5 +90,26 @@ END //
 DELIMITER ; 
 
 
+DELIMITER //
+
+CREATE PROCEDURE Individual_CA_Summary(IN s_reg_no CHAR(12))
+    
+BEGIN
+    SELECT 
+        c.reg_no,
+        c.course_code,
+        c.ca_marks,
+        c.Best_two_quizzes,
+        e.eligibility
+    FROM CA_marks c
+    JOIN CA_eligibility e
+      ON c.reg_no = e.reg_no
+     AND c.course_code = e.course_code
+    WHERE c.reg_no = s_reg_no
+    ORDER BY c.course_code;
+END //
+
+DELIMITER ;
+
 
 
