@@ -30,3 +30,38 @@ CREATE TABLE lecturer_degree (
     PRIMARY KEY (lec_id, degree),
     FOREIGN KEY (lec_id) REFERENCES lecturer(lec_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+
+
+
+CREATE TABLE technical_officer (
+    id CHAR(12) PRIMARY KEY,
+    hash_pwd VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE admin (
+    id CHAR(12) PRIMARY KEY,
+    hash_pwd VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE dean (
+    id CHAR(12) PRIMARY KEY,
+    appoint_date DATE NOT NULL,
+    office_room VARCHAR(255) NOT NULL,
+    FOREIGN KEY (id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE student (
+    reg_no CHAR(12) PRIMARY KEY,
+    year INT,
+    dob DATE,
+    gender ENUM('F', 'M'),
+    status ENUM('Proper', 'Repeat') DEFAULT 'Proper',
+    department_id CHAR(7),
+    lec_id CHAR(12),
+    FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
+    SET NULL ON UPDATE CASCADE,
+        FOREIGN KEY (lec_id) REFERENCES lecturer(lec_id) ON DELETE
+    SET NULL ON UPDATE CASCADE,
+        FOREIGN KEY (reg_no) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
+);
