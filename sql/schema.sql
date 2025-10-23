@@ -56,7 +56,7 @@ CREATE TABLE student (
     year INT,
     dob DATE,
     gender ENUM('F', 'M'),
-    status ENUM('Proper', 'Repeat') DEFAULT 'Proper',
+    status ENUM('Proper', 'Repeat','Suspended') DEFAULT 'Proper',
     department_id CHAR(7),
     lec_id CHAR(12),
     FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
@@ -151,4 +151,5 @@ CREATE TABLE student_guardian (
     PRIMARY KEY (reg_no, guardian_id),
     CONSTRAINT student_guardian_ibfk_1 FOREIGN KEY (reg_no) REFERENCES student (reg_no) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
 
