@@ -65,3 +65,36 @@ CREATE TABLE student (
     SET NULL ON UPDATE CASCADE,
         FOREIGN KEY (reg_no) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
+
+
+CREATE TABLE medical (
+    ref_no CHAR(6) PRIMARY KEY,
+    status ENUM('Approved', 'Pending', 'Rejected') DEFAULT 'Pending',
+    reason TEXT,
+    reg_no CHAR(12),
+    start_date DATE,
+    end_date DATE,
+    FOREIGN KEY (reg_no) REFERENCES student(reg_no) ON DELETE CASCADE ON UPDATE CASCADE
+);
+CREATE TABLE exam_type (
+    type_id CHAR(4) PRIMARY KEY,
+    type_name VARCHAR(50) UNIQUE NOT NULL
+);
+CREATE TABLE course_unit (
+    course_code CHAR(7) PRIMARY KEY,
+    credits INT,
+    title VARCHAR(100),
+    type ENUM('Theory', 'Practical', 'Both'),
+    department_id CHAR(7),
+    FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
+    SET NULL ON UPDATE CASCADE
+);
+CREATE TABLE student_course (
+    reg_no CHAR(12),
+    course_code CHAR(7),
+    PRIMARY KEY (reg_no, course_code),
+    FOREIGN KEY (reg_no) REFERENCES student(reg_no) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (course_code) REFERENCES course_unit(course_code) ON DELETE CASCADE ON UPDATE CASCADE
+);
