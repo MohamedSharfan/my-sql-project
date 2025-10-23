@@ -188,7 +188,30 @@ FROM marks m
 WHERE m.type_id IN('ASST','MIDT','MIDP','FINT','FINP') 
 GROUP BY m.reg_no,m.course_code; 
 	
+
+CREATE OR REPLACE VIEW CA_eligibility AS
+SELECT
+    c.reg_no,
+	CONCAT(u.f_name, ' ', u.l_name) AS student_name,
+    c.course_code,
 	
+    CASE
+        WHEN EXISTS (
+            SELECT 1
+            FROM medical md
+            JOIN exam_type e 
+            ON e.type_id IN ('MIDT','MIDP')
+            WHERE md.reg_no = c.reg_no
+              AND md.status = 'Approved'
+              AND e.exam_date BETWEEN md.start_date AND md.end_date
+        ) THEN 'MC'
+        WHEN c.ca_marks >= 16 THEN 'Eligible'
+        ELSE 'Not Eligible'
+    END AS eligibility 
+FROM CA_marks c
+JOIN user u 
+ON u.id=c.reg_no;
+
 
 
 
@@ -269,5 +292,6 @@ FROM (
     JOIN course_unit cu ON n.course_code = cu.course_code
     GROUP BY s.reg_no, cu.course_code
 ) AS sub;
+
 
 
