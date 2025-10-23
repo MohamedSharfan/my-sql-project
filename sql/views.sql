@@ -92,6 +92,107 @@ GROUP BY a.course_code, s.reg_no;
 
 
 
+CREATE OR REPLACE VIEW Best_two_quizzes AS 
+SELECT 
+    reg_no,
+    course_code, 
+
+    
+    (
+        COALESCE(MAX(CASE WHEN type_id = 'QU01' THEN mark END), 0) +
+        COALESCE(MAX(CASE WHEN type_id = 'QU02' THEN mark END), 0) +
+        COALESCE(MAX(CASE WHEN type_id = 'QU03' THEN mark END), 0)
+        -
+        LEAST(
+            COALESCE(MAX(CASE WHEN type_id = 'QU01' THEN mark END), 0),
+            COALESCE(MAX(CASE WHEN type_id = 'QU02' THEN mark END), 0),
+            COALESCE(MAX(CASE WHEN type_id = 'QU03' THEN mark END), 0)
+        )
+    ) AS max_two_quizzes, 
+    
+    
+    (
+        (
+            COALESCE(MAX(CASE WHEN type_id = 'QU01' THEN mark END), 0) +
+            COALESCE(MAX(CASE WHEN type_id = 'QU02' THEN mark END), 0) +
+            COALESCE(MAX(CASE WHEN type_id = 'QU03' THEN mark END), 0)
+            -
+            LEAST(
+                COALESCE(MAX(CASE WHEN type_id = 'QU01' THEN mark END), 0),
+                COALESCE(MAX(CASE WHEN type_id = 'QU02' THEN mark END), 0),
+                COALESCE(MAX(CASE WHEN type_id = 'QU03' THEN mark END), 0)
+            )
+        ) / 2
+    ) AS avg_max
+
+FROM marks 
+WHERE type_id IN ('QU01','QU02','QU03') 
+GROUP BY reg_no, course_code;
+
+CREATE OR REPLACE VIEW CA_marks AS 
+SELECT 
+	m.reg_no, 
+	m.course_code,
+	b.avg_max, 
+	
+	MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) AS assesment,
+	MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) AS mid_theory, 
+	MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) AS mid_practical,
+	MAX(CASE WHEN m.type_id= 'FINT' THEN m.mark END) AS final_theory, 
+	MAX(CASE WHEN m.type_id= 'FINP' THEN m.mark END) AS final_practical, 
+	
+	CASE 
+		  WHEN m.course_code= 'TCS1212' THEN 
+			 (b.avg_max * 0.10)+ 
+			 (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
+			 (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.10)  
+			 
+		  WHEN m.course_code= 'TMS1233' THEN 
+			 (b.avg_max * 0.10)+ 
+			 (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.05) + 
+			 (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.25) 
+		  
+		  WHEN m.course_code= 'ICT1212' THEN 
+			 (b.avg_max * 0.10)+ 
+			 (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.30)  
+			 
+		  WHEN m.course_code= 'ICT1222' THEN  
+			 (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
+			 (MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) * 0.20) 
+						 
+		   WHEN m.course_code= 'ICT1233' THEN 
+			 (b.avg_max * 0.10)+ 
+			 (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
+			 (MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) * 0.10) 
+						 
+		   WHEN m.course_code= 'ICT1242' THEN 
+			 (b.avg_max * 0.10)+ 
+			 (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.05) + 
+			 (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.25) 
+						 
+		   WHEN m.course_code= 'ICT1253' THEN 
+			 (b.avg_max * 0.10)+ 
+			 (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.10) + 
+			 (MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) * 0.20) 
+						 
+		   WHEN m.course_code= 'ENG1222' THEN 
+			 (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
+			 (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.20) 
+						 
+	   
+    END AS ca_marks	 
+	
+FROM marks m 
+   JOIN Best_two_quizzes b 	
+   ON m.reg_no=b.reg_no  AND  m.course_code=b.course_code 
+WHERE m.type_id IN('ASST','MIDT','MIDP','FINT','FINP') 
+GROUP BY m.reg_no,m.course_code; 
+	
+	
+
+
+
+
 
 
 
@@ -168,3 +269,5 @@ FROM (
     JOIN course_unit cu ON n.course_code = cu.course_code
     GROUP BY s.reg_no, cu.course_code
 ) AS sub;
+
+
