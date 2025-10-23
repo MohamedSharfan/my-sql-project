@@ -1,0 +1,32 @@
+
+
+CREATE DATABASE tecmis;
+USE tecmis;
+CREATE TABLE department (
+    dep_id CHAR(7) PRIMARY KEY,
+    dep_name VARCHAR(100) NOT NULL,
+    contact_email VARCHAR(100) UNIQUE
+);
+CREATE TABLE user (
+    id CHAR(12) PRIMARY KEY,
+    f_name VARCHAR(50) NOT NULL,
+    l_name VARCHAR(50) NOT NULL,
+    type VARCHAR(30) NOT NULL,
+    nic VARCHAR(15) UNIQUE,
+    email VARCHAR(100) UNIQUE,
+    contact_no VARCHAR(15)
+);
+CREATE TABLE lecturer (
+    lec_id CHAR(12) PRIMARY KEY,
+    designation VARCHAR(50),
+    department_id CHAR(7),
+    FOREIGN KEY (lec_id) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
+    SET NULL ON UPDATE CASCADE
+);
+CREATE TABLE lecturer_degree (
+    lec_id CHAR(12),
+    degree VARCHAR(100),
+    PRIMARY KEY (lec_id, degree),
+    FOREIGN KEY (lec_id) REFERENCES lecturer(lec_id) ON DELETE CASCADE ON UPDATE CASCADE
+);
