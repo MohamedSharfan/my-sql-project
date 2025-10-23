@@ -90,7 +90,26 @@ END //
 DELIMITER ; 
 
 
+DELIMITER // 
+
+
 DELIMITER //
+
+CREATE PROCEDURE Get_Individual_CA(IN s_reg CHAR(12), IN s_course CHAR(7))
+BEGIN
+
+  SELECT 
+    reg_no,
+    course_code,
+    ca_marks,
+    IF(ca_marks >= 16, 'Eligible', 'Not Eligible') AS eligibility
+  FROM CA_marks
+  WHERE reg_no = s_reg AND course_code = s_course;
+  
+END //
+
+DELIMITER ; 
+
 
 CREATE PROCEDURE Individual_CA_Summary(IN s_reg_no CHAR(12))
     
@@ -110,6 +129,7 @@ BEGIN
 END //
 
 DELIMITER ;
+
 
 
 
