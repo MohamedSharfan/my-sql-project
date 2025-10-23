@@ -66,3 +66,29 @@ END //
 DELIMITER ;    
 
 
+DELIMITER //
+
+CREATE PROCEDURE Whole_Batch_Ca_Summary()
+BEGIN
+    SELECT 
+        c.course_code,
+        COUNT(*) AS total_students,
+        ROUND(AVG(c.ca_marks),2) AS avg_ca,
+        ROUND(MAX(c.ca_marks),2) AS highest_ca,
+        ROUND(MIN(c.ca_marks),2) AS lowest_ca,
+        SUM(CASE WHEN e.eligibility = 'Eligible' THEN 1 ELSE 0 END) AS eligible_students,
+        SUM(CASE WHEN e.eligibility = 'Not Eligible' THEN 1 ELSE 0 END) AS not_eligible_students,
+        SUM(CASE WHEN e.eligibility = 'MC' THEN 1 ELSE 0 END) AS mc_students
+    FROM CA_marks c
+    JOIN CA_eligibility e
+      ON c.reg_no = e.reg_no
+     AND c.course_code = e.course_code
+    GROUP BY c.course_code
+    ORDER BY c.course_code;
+END //
+
+DELIMITER ; 
+
+
+
+
