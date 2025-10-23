@@ -43,3 +43,26 @@ BEGIN
 END //
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE Highest_CA_Per_Course()
+BEGIN
+    SELECT 
+        c.course_code,
+        c.reg_no,
+        c.ca_marks
+    FROM CA_marks c
+    JOIN (
+        SELECT course_code, MAX(ca_marks) AS highest_ca
+        FROM CA_marks
+        GROUP BY course_code
+    ) h
+      ON c.course_code = h.course_code
+     AND c.ca_marks = h.highest_ca
+    ORDER BY c.course_code;
+END //
+
+DELIMITER ;    
+
+
