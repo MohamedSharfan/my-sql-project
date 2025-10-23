@@ -80,7 +80,8 @@ CREATE TABLE medical (
 );
 CREATE TABLE exam_type (
     type_id CHAR(4) PRIMARY KEY,
-    type_name VARCHAR(50) UNIQUE NOT NULL
+    type_name VARCHAR(50) UNIQUE NOT NULL,
+    exam_date DATE
 );
 CREATE TABLE course_unit (
     course_code CHAR(7) PRIMARY KEY,
@@ -150,3 +151,4 @@ CREATE TABLE student_guardian (
     PRIMARY KEY (reg_no, guardian_id),
     CONSTRAINT student_guardian_ibfk_1 FOREIGN KEY (reg_no) REFERENCES student (reg_no) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
