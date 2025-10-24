@@ -48,7 +48,12 @@ INSERT INTO User (id, f_name, l_name, type, nic, email, contact_no) VALUES
 ('TG/2023/1798', 'Tharushi', 'Senanayake', 'Student', '200312345670', 'tharushi.senanayake1798@tec.lk', '0754567890'),
 ('TG/2023/1799', 'Kasun', 'De Silva', 'Student', '200323456781', 'kasun.desilva1799@tec.lk', '0765678901'),
 ('TG/2023/1800', 'Pavithra', 'Jayasinghe', 'Student', '200334567892', 'pavithra.jayasinghe1800@tec.lk', '0776789012'),
-('TG/2022/1500', 'Supun', 'Jayasinghe', 'Student', '200234567892', 'supun.jayasinghe1800@tec.lk', '0776789123');
+('TG/2022/1500', 'Supun', 'Jayasinghe', 'Student', '200234567892', 'supun.jayasinghe1800@tec.lk', '0776789123'),
+('TG/2022/1501', 'Tharushi', 'Wikramanayake', 'Student', '200212345670', 'tharushi.wikramanayake1798@tec.lk', '07545678123'),
+('TG/2022/1502', 'Kusum', 'De Silva', 'Student', '200223456781', 'kusum.desilva1799@tec.lk', '0765612301'),
+('TG/2023/1503', 'Bandara', 'Senarath', 'Student', '200267891234', 'bandara.senarath1793@tec.lk', '0760712345'),
+('TG/2023/1504', 'Dilmi', 'Fernando', 'Student', '200347891234', 'dilmi.fernando1781@tec.lk', '0719632235');
+
 
 
 INSERT INTO Lecturer (lec_id, designation, department_id) VALUES
@@ -139,5 +144,9 @@ INSERT INTO Student (reg_no, year, dob, status, gender, department_id, lec_id) V
 ('TG/2023/1798', 1, '2003-04-05', 'Proper', 'F', 'DEP001', 'Lec_009'),
 ('TG/2023/1799', 1, '2003-06-02', 'Proper', 'M', 'DEP001', 'Lec_010'),
 ('TG/2023/1800', 1, '2003-08-02', 'Suspended', 'M', 'DEP001', 'Lec_010'),
-('TG/2022/1500', 1, '2002-08-02', 'Repeat', 'M', 'DEP001', 'Lec_010'); 
+('TG/2022/1500', 2, '2002-08-02', 'Repeat', 'M', 'DEP001', 'Lec_010'),
+('TG/2022/1501', 2, '2002-07-03', 'Repeat', 'F', 'DEP001', 'Lec_010'),
+('TG/2022/1502', 2, '2002-06-02', 'Repeat', 'M', 'DEP001', 'Lec_010'),
+('TG/2022/1503', 2, '2002-05-02', 'Repeat', 'M', 'DEP001', 'Lec_010'),
+('TG/2022/1504', 2, '2002-04-02', 'Repeat', 'F', 'DEP001', 'Lec_010'); 
 
