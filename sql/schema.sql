@@ -61,7 +61,7 @@ CREATE TABLE student (
     mentor_id CHAR(12),
     FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
     SET NULL ON UPDATE CASCADE,
-        FOREIGN KEY (lec_id) REFERENCES lecturer(lec_id) ON DELETE
+        FOREIGN KEY (mentor_id) REFERENCES lecturer(lec_id) ON DELETE
     SET NULL ON UPDATE CASCADE,
         FOREIGN KEY (reg_no) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
