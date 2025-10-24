@@ -88,7 +88,8 @@ CREATE TABLE course_unit (
     credits INT,
     title VARCHAR(100),
     type ENUM('Theory', 'Practical', 'Both'),
-    department_id CHAR(7),
+    session_hour INT,
+    department_id CHAR(7), 
     FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
     SET NULL ON UPDATE CASCADE
 );
@@ -151,5 +152,4 @@ CREATE TABLE student_guardian (
     PRIMARY KEY (reg_no, guardian_id),
     CONSTRAINT student_guardian_ibfk_1 FOREIGN KEY (reg_no) REFERENCES student (reg_no) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
 
