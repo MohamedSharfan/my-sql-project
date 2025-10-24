@@ -58,7 +58,7 @@ CREATE TABLE student (
     gender ENUM('F', 'M'),
     status ENUM('Proper', 'Repeat','Suspended') DEFAULT 'Proper',
     department_id CHAR(7),
-    lec_id CHAR(12),
+    mentor_id CHAR(12),
     FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
     SET NULL ON UPDATE CASCADE,
         FOREIGN KEY (lec_id) REFERENCES lecturer(lec_id) ON DELETE

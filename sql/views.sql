@@ -1,91 +1,112 @@
+----Sharfan 
+
 CREATE OR REPLACE VIEW attendance_summary_by_student AS
 SELECT
     s.reg_no,
     CONCAT(u.f_name, ' ', u.l_name) AS student_name,
     a.course_code,
- 
+    cu.session_hour,
+
+
     SUM(
         CASE
             WHEN a.status = 'Present' THEN 1
             WHEN a.status = 'Medical' AND m.status = 'Approved' THEN 1
             ELSE 0
         END
-    ) AS attended_classes,
+    ) AS attended_sessions,
 
-    
+  
+    SUM(
+        CASE
+            WHEN a.status = 'Present' THEN cu.session_hour
+            WHEN a.status = 'Medical' AND m.status = 'Approved' THEN cu.session_hour
+            ELSE 0
+        END
+    ) AS attended_hours,
+
+  
     ROUND(
-        SUM(
-            CASE
-                WHEN a.status = 'Present' THEN 1
-                WHEN a.status = 'Medical' AND m.status = 'Approved' THEN 1
-                ELSE 0
-            END
-        ) / COUNT(a.week_no) * 100,
+        (
+            SUM(
+                CASE
+                    WHEN a.status = 'Present' THEN cu.session_hour
+                    WHEN a.status = 'Medical' AND m.status = 'Approved' THEN cu.session_hour
+                    ELSE 0
+                END
+            )
+        ) / (15 * cu.session_hour) * 100,
         2
     ) AS attendance_percentage,
 
     CASE
         WHEN ROUND(
-            SUM(
-                CASE
-                    WHEN a.status = 'Present' THEN 1
-                    WHEN a.status = 'Medical' AND m.status = 'Approved' THEN 1
-                    ELSE 0
-                END
-            ) / COUNT(a.week_no) * 100,
+            (
+                SUM(
+                    CASE
+                        WHEN a.status = 'Present' THEN cu.session_hour
+                        WHEN a.status = 'Medical' AND m.status = 'Approved' THEN cu.session_hour
+                        ELSE 0
+                    END
+                )
+            ) / (15 * cu.session_hour) * 100,
             2
         ) >= 80 THEN 'Eligible'
         ELSE 'Not Eligible'
     END AS eligibility
+
 FROM attendance a
 JOIN student s ON a.reg_no = s.reg_no
-JOIN user u ON s.reg_no = u.id
+JOIN user u ON u.id = s.reg_no
+JOIN course_unit cu ON a.course_code = cu.course_code
 LEFT JOIN medical m ON a.ref_no = m.ref_no
 
-GROUP BY s.reg_no, a.course_code, student_name;
+GROUP BY s.reg_no, a.course_code, student_name, cu.session_hour;
+
 
 
 
 
 CREATE OR REPLACE VIEW attendance_summary_by_course AS
 SELECT
-    a.course_code,
-    s.reg_no,
-    CONCAT(u.f_name, ' ', u.l_name) AS student_name,
-    COUNT(a.week_no) AS total_classes,
+    cu.course_code,
+    cu.title,
+    cu.session_hour,
+    
+    COUNT(DISTINCT a.reg_no) AS total_students,
+    
+  
+    (15 * cu.session_hour) AS total_hours_per_student,
+    
+
     SUM(
         CASE
-            WHEN a.status = 'Present' THEN 1
-            WHEN a.status = 'Medical' AND m.status = 'Approved' THEN 1
+            WHEN a.status = 'Present' THEN cu.session_hour
+            WHEN a.status = 'Medical' AND m.status = 'Approved' THEN cu.session_hour
             ELSE 0
         END
-    ) AS attended_classes,
+    ) AS total_attended_hours,
+    
+  
     ROUND(
         SUM(
             CASE
-                WHEN a.status = 'Present' THEN 1
-                WHEN a.status = 'Medical' AND m.status = 'Approved' THEN 1
+                WHEN a.status = 'Present' THEN cu.session_hour
+                WHEN a.status = 'Medical' AND m.status = 'Approved' THEN cu.session_hour
                 ELSE 0
             END
-        ) / COUNT(a.week_no) * 100, 2
-    ) AS attendance_percentage,
-    CASE
-        WHEN ROUND(
-            SUM(
-                CASE
-                    WHEN a.status = 'Present' THEN 1
-                    WHEN a.status = 'Medical' AND m.status = 'Approved' THEN 1
-                    ELSE 0
-                END
-            ) / COUNT(a.week_no) * 100, 2
-        ) >= 80 THEN 'Eligible'
-        ELSE 'Not Eligible'
-    END AS eligibility
-FROM attendance a
-JOIN student s ON a.reg_no = s.reg_no
-JOIN user u ON s.reg_no = u.id
+        ) / (COUNT(DISTINCT a.reg_no) * 15 * cu.session_hour) * 100,
+        2
+    ) AS average_attendance_percentage
+
+FROM course_unit cu
+LEFT JOIN attendance a ON a.course_code = cu.course_code
 LEFT JOIN medical m ON a.ref_no = m.ref_no
-GROUP BY a.course_code, s.reg_no;
+
+GROUP BY cu.course_code, cu.title, cu.session_hour;
+
+
+
 
 
 
