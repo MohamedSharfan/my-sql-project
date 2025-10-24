@@ -56,7 +56,7 @@ CREATE TABLE student (
     year INT,
     dob DATE,
     gender ENUM('F', 'M'),
-    status ENUM('Proper', 'Repeat') DEFAULT 'Proper',
+    status ENUM('Proper', 'Repeat','Suspended') DEFAULT 'Proper',
     department_id CHAR(7),
     lec_id CHAR(12),
     FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
@@ -80,7 +80,8 @@ CREATE TABLE medical (
 );
 CREATE TABLE exam_type (
     type_id CHAR(4) PRIMARY KEY,
-    type_name VARCHAR(50) UNIQUE NOT NULL
+    type_name VARCHAR(50) UNIQUE NOT NULL,
+    exam_date DATE
 );
 CREATE TABLE course_unit (
     course_code CHAR(7) PRIMARY KEY,
