@@ -2978,4 +2978,242 @@ VALUES (
     );
 
 
+
+
+-------adhikai 
+
+
+
+INSERT INTO attendance (
+        attendance_id,
+        week_no,
+        status,
+        reg_no,
+        course_code,
+        ref_no
+    )
+VALUES (
+        'ATT_001',
+        10,
+        'Present',
+        'TG/2023/1780',
+        'TMS1233',
+        NULL
+    ),
+    (
+        'ATT_002',
+        1,
+        'Present',
+        'TG/2023/1781',
+        'ICT1222',
+        NULL
+    ),
+    (
+        'ATT_003',
+        5,
+        'Absent',
+        'TG/2023/1782',
+        'ICT1212',
+        NULL
+    ),
+    (
+        'ATT_004',
+        1,
+        'Present',
+        'TG/2023/1783',
+        'ICT1253',
+        NULL
+    ),
+    (
+        'ATT_005',
+        12,
+        'Present',
+        'TG/2023/1784',
+        'ICT1222',
+        NULL
+    ),
+    (
+        'ATT_006',
+        1,
+        'Medical',
+        'TG/2023/1780',
+        'ICT1212',
+        'REF001'
+    ),
+    (
+        'ATT_007',
+        2,
+        'Medical',
+        'TG/2023/1783',
+        'ICT1212',
+        'REF002'
+    ),
+    (
+        'ATT_008',
+        3,
+        'Medical',
+        'TG/2023/1787',
+        'ICT1233',
+        'REF003'
+    ),
+    (
+        'ATT_009',
+        6,
+        'Present',
+        'TG/2023/1785',
+        'ICT1222',
+        NULL
+    ),
+    (
+        'ATT_010',
+        2,
+        'Absent',
+        'TG/2023/1786',
+        'ENG1222',
+        NULL
+    ),
+    (
+        'ATT_011',
+        3,
+        'Present',
+        'TG/2023/1788',
+        'ICT1242',
+        NULL
+    ),
+    (
+        'ATT_012',
+        13,
+        'Absent',
+        'TG/2023/1789',
+        'ICT1242',
+        NULL
+    ),
+    (
+        'ATT_013',
+        4,
+        'Present',
+        'TG/2023/1790',
+        'ICT1253',
+        NULL
+    ),
+    (
+        'ATT_014',
+        4,
+        'Absent',
+        'TG/2023/1791',
+        'ICT1253',
+        NULL
+    ),
+    (
+        'ATT_015',
+        5,
+        'Present',
+        'TG/2023/1792',
+        'ICT1233',
+        NULL
+    );
+INSERT INTO student_guardian (
+        reg_no,
+        guardian_id,
+        name,
+        contact_no,
+        relationship,
+        occupation
+    )
+VALUES (
+        'TG/2023/1780',
+        'G_1780_01',
+        'Kamal Perera',
+        '0771234567',
+        'Father',
+        'Engineer'
+    ),
+    (
+        'TG/2023/1780',
+        'G_1780_02',
+        'Nayana Perera',
+        '0712345678',
+        'Mother',
+        'Teacher'
+    ),
+    (
+        'TG/2023/1781',
+        'G_1781_01',
+        'Sunil Fernando',
+        '0723456789',
+        'Father',
+        'Doctor'
+    ),
+    (
+        'TG/2023/1782',
+        'G_1782_01',
+        'Priya Wijeratne',
+        '0734567890',
+        'Mother',
+        'Accountant'
+    ),
+    (
+        'TG/2023/1783',
+        'G_1783_01',
+        'Ranil Rajapaksha',
+        '0745678901',
+        'Father',
+        'Business'
+    ),
+    (
+        'TG/2023/1784',
+        'G_1784_01',
+        'Chamara Senanayake',
+        '0756789012',
+        'Father',
+        'Government Officer'
+    ),
+    (
+        'TG/2023/1785',
+        'G_1785_01',
+        'Sanjaya Perera',
+        '0767890123',
+        'Father',
+        'Bank Manager'
+    ),
+    (
+        'TG/2023/1786',
+        'G_1786_01',
+        'Lakmal Fernando',
+        '0778901234',
+        'Father',
+        'Architect'
+    ),
+    (
+        'TG/2023/1787',
+        'G_1787_01',
+        'Nimal Kumarasinghe',
+        '0789012345',
+        'Father',
+        'Software Engineer'
+    ),
+    (
+        'TG/2023/1788',
+        'G_1788_01',
+        'Anura De Silva',
+        '0790123456',
+        'Father',
+        'Professor'
+    ),
+    (
+        'TG/2023/1789',
+        'G_1789_01',
+        'Sarath Jayasinghe',
+        '0701234567',
+        'Father',
+        'Military Officer'
+    ),
+    (
+        'TG/2023/1790',
+        'G_1790_01',
+        'Bandara Gunawardena',
+        '0712345678',
+        'Father',
+        'Pilot'
+    );
     
