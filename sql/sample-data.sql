@@ -3248,3 +3248,33 @@ CROSS JOIN (
     SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION
     SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14 UNION SELECT 15
 ) w;
+
+
+-- razim
+
+INSERT INTO student_course (reg_no, course_code)
+SELECT s.reg_no, cu.course_code
+FROM student s
+CROSS JOIN course_unit cu
+LEFT JOIN student_course sc
+       ON sc.reg_no = s.reg_no AND sc.course_code = cu.course_code
+WHERE s.reg_no LIKE 'TG/2023/%'
+  AND sc.reg_no IS NULL;
+
+
+
+
+  INSERT INTO student_course (reg_no, course_code)
+SELECT t.reg_no, t.course_code
+FROM (
+    SELECT s.reg_no, cu.course_code,
+           ROW_NUMBER() OVER (PARTITION BY s.reg_no ORDER BY RAND()) AS rn
+    FROM student s
+    CROSS JOIN course_unit cu
+    WHERE s.reg_no LIKE 'TG/2022/%'
+) AS t
+LEFT JOIN student_course sc
+       ON sc.reg_no = t.reg_no AND sc.course_code = t.course_code
+WHERE t.rn <= 2
+  AND sc.reg_no IS NULL;
+
