@@ -87,3 +87,57 @@ INSERT INTO Lecturer_Degree (lec_id, degree) VALUES
 ('Lec_014', 'MSc in Bio System Technology'),
 ('Lec_015', 'Bachelour of English literature'), 
 ('Lec_016', 'BSc in Management');
+
+
+
+
+
+
+--razim
+
+
+
+INSERT INTO Technical_Officer (id, hash_pwd) VALUES
+('TO_001', 'a8f2b9c7d4e6f1a2b3c4d5e6f7a8b9c0'),
+('TO_002', 'b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6'),
+('TO_003', 'c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8'),
+('TO_004', 'd4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9'),
+('TO_005', 'e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0');
+
+
+
+
+
+
+INSERT INTO Admin (id, hash_pwd) VALUES
+('Ad_001', 'd4c3b2a1f6e5d4c3b2a1f0e9d8c7b6a5');
+
+
+INSERT INTO Dean (id, appoint_date, office_room) VALUES
+('De_001', '2021-06-15', 'Office Room A201');
+
+
+INSERT INTO Student (reg_no, year, dob, status, gender, department_id, lec_id) VALUES
+('TG/2023/1780', 1, '2003-01-14', 'Proper', 'M', 'DEP001', 'Lec_003'),
+('TG/2023/1781', 1, '2003-02-20', 'Proper', 'F', 'DEP001', 'Lec_006'),
+('TG/2023/1782', 1, '2003-03-10', 'Proper', 'F', 'DEP001', 'Lec_009'),
+('TG/2023/1783', 1, '2003-04-25', 'Proper', 'M', 'DEP001', 'Lec_012'),
+('TG/2023/1784', 1, '2003-05-12', 'Proper', 'F', 'DEP001', 'Lec_004'),
+('TG/2023/1785', 1, '2003-06-23', 'Proper', 'M', 'DEP001', 'Lec_007'),
+('TG/2023/1786', 1, '2003-07-05', 'Proper', 'M', 'DEP001', 'Lec_010'),
+('TG/2023/1787', 1, '2003-08-14', 'Proper', 'F', 'DEP001', 'Lec_013'),
+('TG/2023/1788', 1, '2003-09-03', 'Proper', 'F', 'DEP001', 'Lec_005'),
+('TG/2023/1789', 1, '2003-10-21', 'Proper', 'M', 'DEP001', 'Lec_008'),
+('TG/2023/1790', 1, '2003-03-30', 'Proper', 'M', 'DEP001', 'Lec_011'),
+('TG/2023/1791', 1, '2003-07-09', 'Proper', 'F', 'DEP001', 'Lec_014'),
+('TG/2023/1792', 1, '2003-05-19', 'Proper', 'M', 'DEP001', 'Lec_003'),
+('TG/2023/1793', 1, '2003-02-27', 'Proper', 'F', 'DEP001', 'Lec_004'),
+('TG/2023/1794', 1, '2003-01-10', 'Proper', 'F', 'DEP001', 'Lec_005'),
+('TG/2023/1795', 1, '2003-09-17', 'Proper', 'F', 'DEP001', 'Lec_006'),
+('TG/2023/1796', 1, '2003-11-23', 'Proper', 'M', 'DEP001', 'Lec_007'),
+('TG/2023/1797', 1, '2003-08-14', 'Proper', 'M', 'DEP001', 'Lec_008'),
+('TG/2023/1798', 1, '2003-04-05', 'Proper', 'F', 'DEP001', 'Lec_009'),
+('TG/2023/1799', 1, '2003-06-02', 'Proper', 'M', 'DEP001', 'Lec_010'),
+('TG/2023/1800', 1, '2003-08-02', 'Proper', 'M', 'DEP001', 'Lec_010'),
+('TG/2022/1500', 1, '2002-08-02', 'Proper', 'M', 'DEP001', 'Lec_010'); 
+
