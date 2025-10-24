@@ -51,8 +51,8 @@ INSERT INTO User (id, f_name, l_name, type, nic, email, contact_no) VALUES
 ('TG/2022/1500', 'Supun', 'Jayasinghe', 'Student', '200234567892', 'supun.jayasinghe1800@tec.lk', '0776789123'),
 ('TG/2022/1501', 'Tharushi', 'Wikramanayake', 'Student', '200212345670', 'tharushi.wikramanayake1798@tec.lk', '07545678123'),
 ('TG/2022/1502', 'Kusum', 'De Silva', 'Student', '200223456781', 'kusum.desilva1799@tec.lk', '0765612301'),
-('TG/2023/1503', 'Bandara', 'Senarath', 'Student', '200267891234', 'bandara.senarath1793@tec.lk', '0760712345'),
-('TG/2023/1504', 'Dilmi', 'Fernando', 'Student', '200347891234', 'dilmi.fernando1781@tec.lk', '0719632235');
+('TG/2022/1503', 'Bandara', 'Senarath', 'Student', '200267891234', 'bandara.senarath1793@tec.lk', '0760712345'),
+('TG/2022/1504', 'Dilmi', 'Fernando', 'Student', '200247891234', 'dilmi.fernando1781@tec.lk', '0719632235');
 
 
 
