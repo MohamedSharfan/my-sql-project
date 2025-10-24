@@ -138,6 +138,6 @@ INSERT INTO Student (reg_no, year, dob, status, gender, department_id, lec_id) V
 ('TG/2023/1797', 1, '2003-08-14', 'Proper', 'M', 'DEP001', 'Lec_008'),
 ('TG/2023/1798', 1, '2003-04-05', 'Proper', 'F', 'DEP001', 'Lec_009'),
 ('TG/2023/1799', 1, '2003-06-02', 'Proper', 'M', 'DEP001', 'Lec_010'),
-('TG/2023/1800', 1, '2003-08-02', 'Proper', 'M', 'DEP001', 'Lec_010'),
-('TG/2022/1500', 1, '2002-08-02', 'Proper', 'M', 'DEP001', 'Lec_010'); 
+('TG/2023/1800', 1, '2003-08-02', 'Suspended', 'M', 'DEP001', 'Lec_010'),
+('TG/2022/1500', 1, '2002-08-02', 'Repeat', 'M', 'DEP001', 'Lec_010'); 
 
