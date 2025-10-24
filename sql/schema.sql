@@ -153,3 +153,151 @@ CREATE TABLE student_guardian (
     CONSTRAINT student_guardian_ibfk_1 FOREIGN KEY (reg_no) REFERENCES student (reg_no) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+
+
+
+-- need to run after sample data
+
+
+
+
+
+
+
+
+CREATE TABLE marks_normalized (
+    mark_id CHAR(12) NOT NULL PRIMARY KEY,
+    reg_no CHAR(12) NOT NULL,
+    course_code CHAR(7) NOT NULL,
+    type_id CHAR(4) NOT NULL,
+    mark DECIMAL(5, 2) NOT NULL,
+    ref_no CHAR(6),
+    CONSTRAINT fk_student FOREIGN KEY (reg_no) REFERENCES student(reg_no) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_course FOREIGN KEY (course_code) REFERENCES course_unit(course_code) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_exam_type FOREIGN KEY (type_id) REFERENCES exam_type(type_id) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT fk_medical FOREIGN KEY (ref_no) REFERENCES medical(ref_no) ON DELETE
+    SET NULL ON UPDATE CASCADE,
+        CONSTRAINT chk_score CHECK (
+            mark BETWEEN 0 AND 100
+        )
+);
+ALTER TABLE marks DROP COLUMN is_medical;
+ALTER TABLE medical
+ADD COLUMN start_date DATE
+AFTER ref_no,
+    ADD COLUMN end_date DATE
+AFTER start_date;
+UPDATE medical
+SET start_date = STR_TO_DATE(SUBSTRING_INDEX(period, ' to ', 1), '%Y-%m-%d'),
+    end_date = STR_TO_DATE(SUBSTRING_INDEX(period, ' to ', -1), '%Y-%m-%d');
+ALTER TABLE medical DROP COLUMN period;
+CREATE TABLE exam_type (
+    type_id CHAR(4) PRIMARY KEY,
+    type_name VARCHAR(50) UNIQUE NOT NULL
+); 
+
+ INSERT IGNORE INTO exam_type (type_id, type_name)
+VALUES ('ASST', 'Assessment'),
+    ('MIDT', 'Mid Theory'),
+    ('MIDP', 'Mid Practical'),
+    ('FINT', 'Final Theory'),
+    ('FINP', 'Final Practical'),
+    ('QU01', 'Quiz 01'),
+    ('QU02', 'Quiz 02'),
+    ('QU03', 'Quiz 03');  
+
+
+
+INSERT INTO marks_normalized (
+        mark_id,
+        reg_no,
+        course_code,
+        type_id,
+        mark,
+        ref_no
+    )
+SELECT CONCAT(
+        'MARK_',
+        LPAD(
+            ROW_NUMBER() OVER (
+                ORDER BY reg_no,
+                    course_code,
+                    type_id
+            ),
+            5,
+            '0'
+        )
+    ) AS mark_id,
+    reg_no,
+    course_code,
+    type_id,
+    COALESCE(mark, 0) AS mark,
+    ref_no
+FROM (
+        SELECT mark_id,
+            reg_no,
+            course_code,
+            ref_no,
+            'ASST' AS type_id,
+            assessment AS mark
+        FROM marks
+        UNION ALL
+        SELECT mark_id,
+            reg_no,
+            course_code,
+            ref_no,
+            'MIDT',
+            mid_theory
+        FROM marks
+        UNION ALL
+        SELECT mark_id,
+            reg_no,
+            course_code,
+            ref_no,
+            'MIDP',
+            mid_practical
+        FROM marks
+        UNION ALL
+        SELECT mark_id,
+            reg_no,
+            course_code,
+            ref_no,
+            'FINT',
+            final_theory
+        FROM marks
+        UNION ALL
+        SELECT mark_id,
+            reg_no,
+            course_code,
+            ref_no,
+            'FINP',
+            final_practical
+        FROM marks
+        UNION ALL
+        SELECT mark_id,
+            reg_no,
+            course_code,
+            ref_no,
+            'QU01',
+            quiz_01
+        FROM marks
+        UNION ALL
+        SELECT mark_id,
+            reg_no,
+            course_code,
+            ref_no,
+            'QU02',
+            quiz_02
+        FROM marks
+        UNION ALL
+        SELECT mark_id,
+            reg_no,
+            course_code,
+            ref_no,
+            'QU03',
+            quiz_03
+        FROM marks
+    ) AS t;
+DROP TABLE marks;
+RENAME TABLE marks_normalized TO marks;
+
