@@ -43,3 +43,20 @@ BEGIN
 END //
 
 DELIMITER ;
+
+
+
+
+
+DELIMITER //
+
+CREATE OR REPLACE PROCEDURE GetStudentReport(IN p_reg_no CHAR(12))
+BEGIN
+    SELECT course_name, course_code, final_grade
+    FROM student_final_grades
+    WHERE reg_no = p_reg_no
+    ORDER BY course_code;
+END;
+//
+
+DELIMITER ;
