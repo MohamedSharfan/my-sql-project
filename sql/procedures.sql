@@ -240,3 +240,38 @@ BEGIN
 END // 
 
 DELIMITER ;
+
+
+
+
+DROP PROCEDURE IF EXISTS get_course_summary;
+
+DELIMITER //
+
+CREATE PROCEDURE get_course_summary(IN input_course_code VARCHAR(7))
+BEGIN
+     IF EXISTS (SELECT 1 FROM batch_summary_of_courses WHERE course_code = input_course_code) THEN
+        SELECT 
+            course_code,
+            course_name,
+            total_students,
+            `A+`,
+            `A`,
+            `A-`,
+            `B+`,
+            `B`,
+            `B-`,
+            `C+`,
+            `C`,
+            `E`,
+            `MC`,
+            `WH`,
+            `passed percentage`
+        FROM batch_summary_of_courses
+        WHERE course_code = input_course_code;
+    ELSE
+        SELECT 'Course not found' AS message;
+    END IF;
+END //
+
+DELIMITER ;
