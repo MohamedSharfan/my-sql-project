@@ -2978,6 +2978,42 @@ VALUES (
     );
 
 
+--to get all attendence
+
+SET @att_no = 1000;
+
+INSERT INTO attendance (attendance_id, week_no, session_type, status, reg_no, course_code, ref_no)
+SELECT
+    CONCAT('ATT_', LPAD(@att_no := @att_no + 1, 4, '0')) AS attendance_id,
+    w.week_no,
+    CASE 
+        WHEN cu.type = 'Theory' THEN 'Theory'
+        WHEN cu.type = 'Practical' THEN 'Practical'
+        WHEN cu.type = 'Both' AND tp.session = 1 THEN 'Theory'
+        WHEN cu.type = 'Both' AND tp.session = 2 THEN 'Practical'
+    END AS session_type,
+    CASE
+        WHEN RAND() < 0.80 THEN 'Present'
+        WHEN RAND() < 0.95 THEN 'Absent'
+        ELSE 'Medical'
+    END AS status,
+    sc.reg_no,
+    sc.course_code,
+    NULL AS ref_no
+FROM student_course sc
+JOIN course_unit cu ON sc.course_code = cu.course_code
+CROSS JOIN (
+    SELECT 1 AS week_no UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION
+    SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION
+    SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14 UNION SELECT 15
+) w
+CROSS JOIN (
+    SELECT 1 AS session UNION SELECT 2
+) tp
+WHERE
+    (cu.type IN ('Theory', 'Practical') AND tp.session = 1)
+    OR
+    (cu.type = 'Both');
 
 
 
@@ -2986,138 +3022,11 @@ VALUES (
 
 
 
--------adhikai 
+--adhikari 
 
 
 
-INSERT INTO attendance (
-        attendance_id,
-        week_no,
-        status,
-        reg_no,
-        course_code,
-        ref_no
-    )
-VALUES (
-        'ATT_001',
-        10,
-        'Present',
-        'TG/2023/1780',
-        'TMS1233',
-        NULL
-    ),
-    (
-        'ATT_002',
-        1,
-        'Present',
-        'TG/2023/1781',
-        'ICT1222',
-        NULL
-    ),
-    (
-        'ATT_003',
-        5,
-        'Absent',
-        'TG/2023/1782',
-        'ICT1212',
-        NULL
-    ),
-    (
-        'ATT_004',
-        1,
-        'Present',
-        'TG/2023/1783',
-        'ICT1253',
-        NULL
-    ),
-    (
-        'ATT_005',
-        12,
-        'Present',
-        'TG/2023/1784',
-        'ICT1222',
-        NULL
-    ),
-    (
-        'ATT_006',
-        1,
-        'Medical',
-        'TG/2023/1780',
-        'ICT1212',
-        'REF001'
-    ),
-    (
-        'ATT_007',
-        2,
-        'Medical',
-        'TG/2023/1783',
-        'ICT1212',
-        'REF002'
-    ),
-    (
-        'ATT_008',
-        3,
-        'Medical',
-        'TG/2023/1787',
-        'ICT1233',
-        'REF003'
-    ),
-    (
-        'ATT_009',
-        6,
-        'Present',
-        'TG/2023/1785',
-        'ICT1222',
-        NULL
-    ),
-    (
-        'ATT_010',
-        2,
-        'Absent',
-        'TG/2023/1786',
-        'ENG1222',
-        NULL
-    ),
-    (
-        'ATT_011',
-        3,
-        'Present',
-        'TG/2023/1788',
-        'ICT1242',
-        NULL
-    ),
-    (
-        'ATT_012',
-        13,
-        'Absent',
-        'TG/2023/1789',
-        'ICT1242',
-        NULL
-    ),
-    (
-        'ATT_013',
-        4,
-        'Present',
-        'TG/2023/1790',
-        'ICT1253',
-        NULL
-    ),
-    (
-        'ATT_014',
-        4,
-        'Absent',
-        'TG/2023/1791',
-        'ICT1253',
-        NULL
-    ),
-    (
-        'ATT_015',
-        5,
-        'Present',
-        'TG/2023/1792',
-        'ICT1233',
-        NULL
-    );
+
 INSERT INTO student_guardian (
         reg_no,
         guardian_id,
@@ -3226,28 +3135,7 @@ VALUES (
 
 
 
--------to get all attendence
 
-SET @att_no = 1000;
-
-INSERT INTO attendance (attendance_id, week_no, status, reg_no, course_code, ref_no)
-SELECT
-    CONCAT('ATT_', LPAD(@att_no := @att_no + 1, 4, '0')) AS attendance_id,
-    w.week_no,
-    CASE
-        WHEN RAND() < 0.70 THEN 'Present'
-        WHEN RAND() < 0.90 THEN 'Absent'
-        ELSE 'Medical'
-    END AS status,
-    sc.reg_no,
-    sc.course_code,
-    NULL AS ref_no
-FROM student_course sc
-CROSS JOIN (
-    SELECT 1 AS week_no UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION
-    SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION
-    SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14 UNION SELECT 15
-) w;
 
 
 -- razim

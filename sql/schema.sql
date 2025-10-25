@@ -130,10 +130,12 @@ CREATE TABLE Marks (
         FOREIGN KEY (Course_code) REFERENCES Course_Unit(Course_code) ON DELETE CASCADE
 );
 
+
 CREATE TABLE attendance (
     attendance_id CHAR(12) PRIMARY KEY,
     week_no INT,
     status ENUM('Present', 'Absent', 'Medical'),
+    session_type ENUM('Theory', 'Practical'),
     reg_no CHAR(12),
     course_code CHAR(7),
     ref_no CHAR(6),
