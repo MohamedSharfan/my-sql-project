@@ -3810,8 +3810,7 @@ FROM (
     AND sc.course_code = t.course_code
 WHERE t.rn <= 2
     AND sc.reg_no IS NULL;
-  AND sc.reg_no IS NULL;
-
+ 
 --SATURDAY RAZIM
  
 
