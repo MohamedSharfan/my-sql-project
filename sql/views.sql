@@ -854,3 +854,105 @@ FROM (
 
 
 
+
+ CREATE OR REPLACE VIEW student_final_grades AS
+WITH marks_pivot AS (
+    SELECT
+        reg_no,
+        course_code,
+        MAX(CASE WHEN type_id = 'QU01' THEN mark END) AS q1,
+        MAX(CASE WHEN type_id = 'QU02' THEN mark END) AS q2,
+        MAX(CASE WHEN type_id = 'QU03' THEN mark END) AS q3,
+        MAX(CASE WHEN type_id = 'ASST' THEN mark END) AS asst,
+        MAX(CASE WHEN type_id = 'MIDT' THEN mark END) AS midt,
+        MAX(CASE WHEN type_id = 'MIDP' THEN mark END) AS midp,
+        MAX(CASE WHEN type_id = 'FINT' THEN mark END) AS fint,
+        MAX(CASE WHEN type_id = 'FINP' THEN mark END) AS finp
+    FROM marks
+    GROUP BY reg_no, course_code
+),
+attendance_calc AS (
+    SELECT
+        reg_no,
+        course_code,
+        ROUND((attended_hours / total_hours) * 100, 2) AS attendance_percentage
+    FROM attendance_summary_by_student
+),
+total_scores AS (
+    SELECT
+        s.reg_no,
+        cu.course_code,
+        cu.type AS course_type,
+        ROUND(
+            CASE
+                WHEN cu.type = 'Both' THEN
+                    (( (COALESCE(m.q1,0) + COALESCE(m.q2,0) + COALESCE(m.q3,0)
+                        - LEAST(COALESCE(m.q1,0), COALESCE(m.q2,0), COALESCE(m.q3,0)) ) / 2 ) * 0.10)
+                    + COALESCE(m.asst,0) * 0.10
+                    + COALESCE(m.midt,0) * 0.10
+                    + COALESCE(m.midp,0) * 0.10
+                    + COALESCE(m.fint,0) * 0.40
+                    + COALESCE(m.finp,0) * 0.20
+                WHEN cu.type = 'Theory' THEN
+                    (( (COALESCE(m.q1,0) + COALESCE(m.q2,0) + COALESCE(m.q3,0)
+                        - LEAST(COALESCE(m.q1,0), COALESCE(m.q2,0), COALESCE(m.q3,0)) ) / 2 ) * 0.10)
+                    + COALESCE(m.asst,0) * 0.10
+                    + COALESCE(m.midt,0) * 0.20
+                    + COALESCE(m.fint,0) * 0.60
+                WHEN cu.type = 'Practical' THEN
+                    (( (COALESCE(m.q1,0) + COALESCE(m.q2,0) + COALESCE(m.q3,0)
+                        - LEAST(COALESCE(m.q1,0), COALESCE(m.q2,0), COALESCE(m.q3,0)) ) / 2 ) * 0.10)
+                    + COALESCE(m.asst,0) * 0.10
+                    + COALESCE(m.midp,0) * 0.20
+                    + COALESCE(m.finp,0) * 0.60
+                ELSE 0
+            END, 2
+        ) AS total_score
+    FROM student s
+    JOIN student_course sc ON s.reg_no = sc.reg_no
+    JOIN course_unit cu ON sc.course_code = cu.course_code
+    LEFT JOIN marks_pivot m ON m.reg_no = s.reg_no AND m.course_code = cu.course_code
+)
+SELECT
+    s.reg_no,
+    CONCAT(u.f_name, ' ', u.l_name) AS student_name,
+    cu.course_code,
+    cu.title AS course_name,
+    cu.type AS course_type,
+    ts.total_score,
+    CASE
+        WHEN s.status = 'Suspended' THEN 'WH'
+        WHEN EXISTS (
+            SELECT 1
+            FROM medical m
+            JOIN course_exam_dates ced ON ced.course_code = cu.course_code
+            WHERE m.reg_no = s.reg_no
+              AND m.status = 'Approved'
+              AND m.start_date <= ced.exam_date
+              AND m.end_date >= ced.exam_date
+        ) THEN 'MC'
+        WHEN COALESCE(att.attendance_percentage, 100) < 80 THEN 'E'
+        WHEN ts.total_score >= 85 THEN 'A+'
+        WHEN ts.total_score >= 75 THEN 'A'
+        WHEN ts.total_score >= 70 THEN 'A-'
+        WHEN ts.total_score >= 65 THEN 'B+'
+        WHEN ts.total_score >= 60 THEN 'B'
+        WHEN ts.total_score >= 55 THEN 'B-'
+        WHEN ts.total_score >= 50 THEN 'C+'
+        WHEN ts.total_score >= 45 THEN 'C'
+        WHEN ts.total_score >= 40 THEN 'C-'
+        ELSE 'E'
+    END AS final_grade
+FROM student s
+JOIN user u ON s.reg_no = u.id
+JOIN student_course sc ON s.reg_no = sc.reg_no
+JOIN course_unit cu ON sc.course_code = cu.course_code
+LEFT JOIN total_scores ts ON ts.reg_no = s.reg_no AND ts.course_code = cu.course_code
+LEFT JOIN attendance_calc att ON att.reg_no = s.reg_no AND att.course_code = cu.course_code;
+
+
+
+ 
+
+
+
