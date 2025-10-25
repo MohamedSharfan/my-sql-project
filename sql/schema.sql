@@ -142,6 +142,18 @@ CREATE TABLE student_guardian (
 );
 
 
+--saturday razim
+
+CREATE TABLE course_exam_dates (
+    course_code CHAR(7),
+    type_id CHAR(4),
+    exam_date DATE,
+    PRIMARY KEY(course_code, type_id),
+    FOREIGN KEY(course_code) REFERENCES course_unit(course_code),
+    FOREIGN KEY(type_id) REFERENCES exam_type(type_id)
+);
+
+
 
 
 
@@ -177,6 +189,7 @@ SET start_date = STR_TO_DATE(SUBSTRING_INDEX(period, ' to ', 1), '%Y-%m-%d'),
 ALTER TABLE medical DROP COLUMN period;
 CREATE TABLE exam_type (
     type_id CHAR(4) PRIMARY KEY,
+<<<<<<< HEAD
     type_name VARCHAR(50) UNIQUE NOT NULL
 );
 INSERT IGNORE INTO exam_type (type_id, type_name)
@@ -188,6 +201,21 @@ VALUES ('ASST', 'Assessment'),
     ('QU01', 'Quiz 01'),
     ('QU02', 'Quiz 02'),
     ('QU03', 'Quiz 03');
+=======
+    type_name VARCHAR(50) NOT NULL
+ ); 
+
+
+
+
+
+
+
+ 
+
+
+
+>>>>>>> 72fc9a4d4acd7c0e70db0e8d91dc654bfdd92a57
 INSERT INTO marks_normalized (
         mark_id,
         reg_no,
