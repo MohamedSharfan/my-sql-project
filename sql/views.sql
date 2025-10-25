@@ -685,11 +685,26 @@ FROM (
             cu.course_code
     ) AS sub;
 
+CREATE OR REPLACE VIEW  Whole_Batch_summary AS
+SELECT
+    reg_no,
+    CONCAT(u.f_name, ' ', u.l_name) AS student_name,
+    MAX(CASE WHEN course_code = 'ENG1222' THEN ca_marks END) AS ENG1222,
+    MAX(CASE WHEN course_code = 'ICT1212' THEN ca_marks END) AS ICT1212,
+    MAX(CASE WHEN course_code = 'ICT1222' THEN ca_marks END) AS ICT1222,
+    MAX(CASE WHEN course_code = 'ICT1233' THEN ca_marks END) AS ICT1233,
+    MAX(CASE WHEN course_code = 'ICT1242' THEN ca_marks END) AS ICT1242,
+    MAX(CASE WHEN course_code = 'ICT1253' THEN ca_marks END) AS ICT1253,
+    MAX(CASE WHEN course_code = 'TCS1212' THEN ca_marks END) AS TCS1212,
+    MAX(CASE WHEN course_code = 'TMS1233' THEN ca_marks END) AS TMS1233
+FROM CA_marks c
+JOIN user u ON u.id = c.reg_no
+GROUP BY reg_no, student_name
+ORDER BY reg_no;
 
 
 
-
- CREATE OR REPLACE VIEW student_final_grades AS
+CREATE OR REPLACE VIEW student_final_grades AS
 WITH marks_pivot AS (
     SELECT
         reg_no,
