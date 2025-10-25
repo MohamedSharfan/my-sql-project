@@ -240,3 +240,50 @@ BEGIN
 END // 
 
 DELIMITER ;
+
+DELIMITER //
+
+CREATE PROCEDURE Get_Individual_CA(IN s_reg_no CHAR(12), IN s_course CHAR(7))
+BEGIN
+    SELECT 
+        w.reg_no,
+        w.student_name,
+        s_course AS course_code,
+        CASE s_course
+            WHEN 'ENG1222' THEN w.ENG1222
+            WHEN 'ICT1212' THEN w.ICT1212
+            WHEN 'ICT1222' THEN w.ICT1222
+            WHEN 'ICT1233' THEN w.ICT1233
+            WHEN 'ICT1242' THEN w.ICT1242
+            WHEN 'ICT1253' THEN w.ICT1253
+            WHEN 'TCS1212' THEN w.TCS1212
+            WHEN 'TMS1233' THEN w.TMS1233
+        END AS ca_marks
+    FROM Whole_Batch_summary w
+    WHERE w.reg_no = s_reg_no;
+END // 
+
+DELIMITER ;                                                                      
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE Get_Student_Ca_Summary(IN s_reg_no CHAR(12))
+BEGIN
+    SELECT 
+        reg_no,
+        student_name,
+        ENG1222,
+        ICT1212,
+        ICT1222,
+        ICT1233,
+        ICT1242,
+        ICT1253,
+        TCS1212,
+        TMS1233
+    FROM  Whole_Batch_summary
+    WHERE reg_no = s_reg_no;
+END // 
+
+DELIMITER ;  
