@@ -1,4 +1,4 @@
-----Sharfan 
+--Sharfan 
 CREATE OR REPLACE VIEW attendance_summary_by_student AS
 SELECT s.reg_no,
     CONCAT(u.f_name, ' ', u.l_name) AS student_name,
@@ -300,6 +300,9 @@ GROUP BY s.reg_no,
     cu.course_code,
     student_name,
     cu.title;
+
+
+
 CREATE OR REPLACE VIEW attendance_summary AS
 SELECT 
     s.reg_no,
