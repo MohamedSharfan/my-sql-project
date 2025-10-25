@@ -803,22 +803,21 @@ LEFT JOIN attendance_calc att ON att.reg_no = s.reg_no AND att.course_code = cu.
 
  
 CREATE OR REPLACE VIEW end_exam_status AS
-SELECT
-    s.reg_no,
+SELECT 
+    s.reg_no AS reg_no,
     CONCAT(u.f_name, ' ', u.l_name) AS student_name,
-    c.course_code,
+    c.course_code AS course_code,
     c.title AS course_name,
     c.type AS course_type,
     MAX(CASE WHEN f.type_id = 'FINT' THEN f.mark END) AS FINT,
     MAX(CASE WHEN f.type_id = 'FINP' THEN f.mark END) AS FINP,
-    CASE
+    CASE 
         WHEN c.type = 'Theory' AND MAX(CASE WHEN f.type_id = 'FINT' THEN f.mark END) >= 35 THEN 'PASS'
         WHEN c.type = 'Practical' AND MAX(CASE WHEN f.type_id = 'FINP' THEN f.mark END) >= 35 THEN 'PASS'
-        WHEN c.type = 'Both'
-             AND MAX(CASE WHEN f.type_id = 'FINT' THEN f.mark END) >= 35
-             AND MAX(CASE WHEN f.type_id = 'FINP' THEN f.mark END) >= 35 THEN 'PASS'
+        WHEN c.type = 'Both' AND MAX(CASE WHEN f.type_id = 'FINT' THEN f.mark END) >= 35 
+            AND MAX(CASE WHEN f.type_id = 'FINP' THEN f.mark END) >= 35 THEN 'PASS'
         ELSE 'FAIL'
-    END AS final_grade
+    END AS end_exam_status
 FROM student s
 JOIN user u ON s.reg_no = u.id
 JOIN marks f ON s.reg_no = f.reg_no
@@ -827,3 +826,57 @@ GROUP BY s.reg_no, u.f_name, u.l_name, c.course_code, c.title, c.type;
 
 
 
+
+CREATE VIEW student_final_grades_student_version AS
+SELECT sf.reg_no,
+       CONCAT(u.f_name, ' ', u.l_name) AS student_name,
+       sf.course_code,
+       sf.course_name,
+       sf.final_grade
+FROM student_final_grades sf
+JOIN user u ON sf.reg_no = u.id
+ORDER BY sf.reg_no;
+
+#below is only to run after above 
+
+CREATE VIEW student_grades_pivot_view_student_version AS
+SELECT 
+    reg_no,
+    student_name,
+    MAX(CASE WHEN course_code = 'ENG1222' THEN final_grade END) AS ENG1222,
+    MAX(CASE WHEN course_code = 'ICT1222' THEN final_grade END) AS ICT1222,
+    MAX(CASE WHEN course_code = 'ICT1242' THEN final_grade END) AS ICT1242,
+    MAX(CASE WHEN course_code = 'ICT1233' THEN final_grade END) AS ICT1233,
+    MAX(CASE WHEN course_code = 'ICT1212' THEN final_grade END) AS ICT1212,
+    MAX(CASE WHEN course_code = 'TCS1212' THEN final_grade END) AS TCS1212,
+    MAX(CASE WHEN course_code = 'ICT1253' THEN final_grade END) AS ICT1253,
+    MAX(CASE WHEN course_code = 'TMS1233' THEN final_grade END) AS TMS1233
+FROM student_final_grades_student_version
+GROUP BY reg_no, student_name
+ORDER BY reg_no;
+
+
+CREATE VIEW batch_summary_of_courses AS
+SELECT 
+    sf.course_code,
+    cu.title AS course_name,
+    COUNT(*) AS total_students,
+    SUM(CASE WHEN sf.final_grade = 'A+' THEN 1 ELSE 0 END) AS `A+`,
+    SUM(CASE WHEN sf.final_grade = 'A'  THEN 1 ELSE 0 END) AS `A`,
+    SUM(CASE WHEN sf.final_grade = 'A-' THEN 1 ELSE 0 END) AS `A-`,
+    SUM(CASE WHEN sf.final_grade = 'B+' THEN 1 ELSE 0 END) AS `B+`,
+    SUM(CASE WHEN sf.final_grade = 'B'  THEN 1 ELSE 0 END) AS `B`,
+    SUM(CASE WHEN sf.final_grade = 'B-' THEN 1 ELSE 0 END) AS `B-`,
+    SUM(CASE WHEN sf.final_grade = 'C+' THEN 1 ELSE 0 END) AS `C+`,
+    SUM(CASE WHEN sf.final_grade = 'C'  THEN 1 ELSE 0 END) AS `C`,
+    SUM(CASE WHEN sf.final_grade = 'E'  THEN 1 ELSE 0 END) AS `E`,
+    SUM(CASE WHEN sf.final_grade = 'MC' THEN 1 ELSE 0 END) AS `MC`,
+    SUM(CASE WHEN sf.final_grade = 'WH' THEN 1 ELSE 0 END) AS `WH`,
+    ROUND(
+        (SUM(CASE WHEN sf.final_grade IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C') THEN 1 ELSE 0 END) / COUNT(*) * 100),
+        2
+    ) AS `passed percentage`
+FROM student_final_grades sf
+JOIN course_unit cu ON sf.course_code = cu.course_code
+GROUP BY sf.course_code, cu.title
+ORDER BY sf.course_code;

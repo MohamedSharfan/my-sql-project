@@ -241,6 +241,42 @@ END //
 
 DELIMITER ;
 
+<<<<<<< HEAD
+
+
+
+DROP PROCEDURE IF EXISTS get_course_summary;
+
+DELIMITER //
+
+CREATE PROCEDURE get_course_summary(IN input_course_code VARCHAR(7))
+BEGIN
+     IF EXISTS (SELECT 1 FROM batch_summary_of_courses WHERE course_code = input_course_code) THEN
+        SELECT 
+            course_code,
+            course_name,
+            total_students,
+            `A+`,
+            `A`,
+            `A-`,
+            `B+`,
+            `B`,
+            `B-`,
+            `C+`,
+            `C`,
+            `E`,
+            `MC`,
+            `WH`,
+            `passed percentage`
+        FROM batch_summary_of_courses
+        WHERE course_code = input_course_code;
+    ELSE
+        SELECT 'Course not found' AS message;
+    END IF;
+END //
+
+DELIMITER ;
+=======
 DELIMITER //
 
 CREATE PROCEDURE Get_Individual_CA(IN s_reg_no CHAR(12), IN s_course CHAR(7))
@@ -287,3 +323,4 @@ BEGIN
 END // 
 
 DELIMITER ;  
+>>>>>>> 2113ff74fa422d7ff2d01ae3710c0956826c6ff3
