@@ -950,6 +950,28 @@ LEFT JOIN attendance_calc att ON att.reg_no = s.reg_no AND att.course_code = cu.
 
 
  
+CREATE OR REPLACE VIEW end_exam_status AS
+SELECT
+    s.reg_no,
+    CONCAT(u.f_name, ' ', u.l_name) AS student_name,
+    c.course_code,
+    c.title AS course_name,
+    c.type AS course_type,
+    MAX(CASE WHEN f.type_id = 'FINT' THEN f.mark END) AS FINT,
+    MAX(CASE WHEN f.type_id = 'FINP' THEN f.mark END) AS FINP,
+    CASE
+        WHEN c.type = 'Theory' AND MAX(CASE WHEN f.type_id = 'FINT' THEN f.mark END) >= 35 THEN 'PASS'
+        WHEN c.type = 'Practical' AND MAX(CASE WHEN f.type_id = 'FINP' THEN f.mark END) >= 35 THEN 'PASS'
+        WHEN c.type = 'Both'
+             AND MAX(CASE WHEN f.type_id = 'FINT' THEN f.mark END) >= 35
+             AND MAX(CASE WHEN f.type_id = 'FINP' THEN f.mark END) >= 35 THEN 'PASS'
+        ELSE 'FAIL'
+    END AS final_grade
+FROM student s
+JOIN user u ON s.reg_no = u.id
+JOIN marks f ON s.reg_no = f.reg_no
+JOIN course_unit c ON f.course_code = c.course_code
+GROUP BY s.reg_no, u.f_name, u.l_name, c.course_code, c.title, c.type;
 
 
 
