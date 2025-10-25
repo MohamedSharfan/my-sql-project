@@ -51,8 +51,8 @@ INSERT INTO User (id, f_name, l_name, type, nic, email, contact_no) VALUES
 ('TG/2022/1500', 'Supun', 'Jayasinghe', 'Student', '200234567892', 'supun.jayasinghe1800@tec.lk', '0776789123'),
 ('TG/2022/1501', 'Tharushi', 'Wikramanayake', 'Student', '200212345670', 'tharushi.wikramanayake1798@tec.lk', '07545678123'),
 ('TG/2022/1502', 'Kusum', 'De Silva', 'Student', '200223456781', 'kusum.desilva1799@tec.lk', '0765612301'),
-('TG/2023/1503', 'Bandara', 'Senarath', 'Student', '200267891234', 'bandara.senarath1793@tec.lk', '0760712345'),
-('TG/2023/1504', 'Dilmi', 'Fernando', 'Student', '200347891234', 'dilmi.fernando1781@tec.lk', '0719632235');
+('TG/2022/1503', 'Bandara', 'Senarath', 'Student', '200267891234', 'bandara.senarath1793@tec.lk', '0760712345'),
+('TG/2022/1504', 'Dilmi', 'Fernando', 'Student', '200247891234', 'dilmi.fernando1781@tec.lk', '0719632235');
 
 
 
@@ -3262,3 +3262,34 @@ WHERE
     (cu.type IN ('Theory', 'Practical') AND tp.session = 1)
     OR
     (cu.type = 'Both');
+
+
+
+-- razim
+
+INSERT INTO student_course (reg_no, course_code)
+SELECT s.reg_no, cu.course_code
+FROM student s
+CROSS JOIN course_unit cu
+LEFT JOIN student_course sc
+       ON sc.reg_no = s.reg_no AND sc.course_code = cu.course_code
+WHERE s.reg_no LIKE 'TG/2023/%'
+  AND sc.reg_no IS NULL;
+
+
+
+
+  INSERT INTO student_course (reg_no, course_code)
+SELECT t.reg_no, t.course_code
+FROM (
+    SELECT s.reg_no, cu.course_code,
+           ROW_NUMBER() OVER (PARTITION BY s.reg_no ORDER BY RAND()) AS rn
+    FROM student s
+    CROSS JOIN course_unit cu
+    WHERE s.reg_no LIKE 'TG/2022/%'
+) AS t
+LEFT JOIN student_course sc
+       ON sc.reg_no = t.reg_no AND sc.course_code = t.course_code
+WHERE t.rn <= 2
+  AND sc.reg_no IS NULL;
+
