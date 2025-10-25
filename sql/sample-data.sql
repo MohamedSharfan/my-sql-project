@@ -3226,25 +3226,39 @@ VALUES (
 
 
 
--------to get all attendence
+--to get all attendence
 
 SET @att_no = 1000;
 
-INSERT INTO attendance (attendance_id, week_no, status, reg_no, course_code, ref_no)
+INSERT INTO attendance (attendance_id, week_no, session_type, status, reg_no, course_code, ref_no)
 SELECT
     CONCAT('ATT_', LPAD(@att_no := @att_no + 1, 4, '0')) AS attendance_id,
     w.week_no,
+    CASE 
+        WHEN cu.type = 'Theory' THEN 'Theory'
+        WHEN cu.type = 'Practical' THEN 'Practical'
+        WHEN cu.type = 'Both' AND tp.session = 1 THEN 'Theory'
+        WHEN cu.type = 'Both' AND tp.session = 2 THEN 'Practical'
+    END AS session_type,
     CASE
-        WHEN RAND() < 0.70 THEN 'Present'
-        WHEN RAND() < 0.90 THEN 'Absent'
+        WHEN RAND() < 0.80 THEN 'Present'
+        WHEN RAND() < 0.95 THEN 'Absent'
         ELSE 'Medical'
     END AS status,
     sc.reg_no,
     sc.course_code,
     NULL AS ref_no
 FROM student_course sc
+JOIN course_unit cu ON sc.course_code = cu.course_code
 CROSS JOIN (
     SELECT 1 AS week_no UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5 UNION
     SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9 UNION SELECT 10 UNION
     SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14 UNION SELECT 15
-) w;
+) w
+CROSS JOIN (
+    SELECT 1 AS session UNION SELECT 2
+) tp
+WHERE
+    (cu.type IN ('Theory', 'Practical') AND tp.session = 1)
+    OR
+    (cu.type = 'Both');
