@@ -1,5 +1,3 @@
-
-
 CREATE DATABASE tecmis;
 USE tecmis;
 CREATE TABLE department (
@@ -30,11 +28,6 @@ CREATE TABLE lecturer_degree (
     PRIMARY KEY (lec_id, degree),
     FOREIGN KEY (lec_id) REFERENCES lecturer(lec_id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
-
-
-
 CREATE TABLE technical_officer (
     id CHAR(12) PRIMARY KEY,
     hash_pwd VARCHAR(255) NOT NULL,
@@ -56,7 +49,7 @@ CREATE TABLE student (
     year INT,
     dob DATE,
     gender ENUM('F', 'M'),
-    status ENUM('Proper', 'Repeat','Suspended') DEFAULT 'Proper',
+    status ENUM('Proper', 'Repeat', 'Suspended') DEFAULT 'Proper',
     department_id CHAR(7),
     mentor_id CHAR(12),
     FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
@@ -65,10 +58,6 @@ CREATE TABLE student (
     SET NULL ON UPDATE CASCADE,
         FOREIGN KEY (reg_no) REFERENCES user(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
-
-
 CREATE TABLE medical (
     ref_no CHAR(6) PRIMARY KEY,
     status ENUM('Approved', 'Pending', 'Rejected') DEFAULT 'Pending',
@@ -89,7 +78,7 @@ CREATE TABLE course_unit (
     title VARCHAR(100),
     type ENUM('Theory', 'Practical', 'Both'),
     session_hour INT,
-    department_id CHAR(7), 
+    department_id CHAR(7),
     FOREIGN KEY (department_id) REFERENCES department(dep_id) ON DELETE
     SET NULL ON UPDATE CASCADE
 );
@@ -100,8 +89,6 @@ CREATE TABLE student_course (
     FOREIGN KEY (reg_no) REFERENCES student(reg_no) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (course_code) REFERENCES course_unit(course_code) ON DELETE CASCADE ON UPDATE CASCADE
 );
-
-
 CREATE TABLE lecturer_course (
     lec_id CHAR(12),
     course_code CHAR(7),
@@ -129,11 +116,10 @@ CREATE TABLE Marks (
     SET NULL,
         FOREIGN KEY (Course_code) REFERENCES Course_Unit(Course_code) ON DELETE CASCADE
 );
-
-
 CREATE TABLE attendance (
     attendance_id CHAR(12) PRIMARY KEY,
     week_no INT,
+    session_date DATE,
     status ENUM('Present', 'Absent', 'Medical'),
     session_type ENUM('Theory', 'Practical'),
     reg_no CHAR(12),
@@ -158,12 +144,8 @@ CREATE TABLE student_guardian (
 
 
 
+
 -- need to run after sample data
-
-
-
-
-
 
 
 
@@ -196,9 +178,8 @@ ALTER TABLE medical DROP COLUMN period;
 CREATE TABLE exam_type (
     type_id CHAR(4) PRIMARY KEY,
     type_name VARCHAR(50) UNIQUE NOT NULL
-); 
-
- INSERT IGNORE INTO exam_type (type_id, type_name)
+);
+INSERT IGNORE INTO exam_type (type_id, type_name)
 VALUES ('ASST', 'Assessment'),
     ('MIDT', 'Mid Theory'),
     ('MIDP', 'Mid Practical'),
@@ -206,10 +187,7 @@ VALUES ('ASST', 'Assessment'),
     ('FINP', 'Final Practical'),
     ('QU01', 'Quiz 01'),
     ('QU02', 'Quiz 02'),
-    ('QU03', 'Quiz 03');  
-
-
-
+    ('QU03', 'Quiz 03');
 INSERT INTO marks_normalized (
         mark_id,
         reg_no,
@@ -302,4 +280,3 @@ FROM (
     ) AS t;
 DROP TABLE marks;
 RENAME TABLE marks_normalized TO marks;
-
