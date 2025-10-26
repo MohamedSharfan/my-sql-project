@@ -420,8 +420,31 @@ DELIMITER ;
 
 
 
+
+=======
+CREATE PROCEDURE get_student_summary(IN input_reg_no VARCHAR(12))
+BEGIN
+     IF EXISTS (SELECT 1 FROM student_final_grades WHERE reg_no = input_reg_no) THEN
+        
+         SELECT
+            course_code,
+            course_name,
+            final_grade
+        FROM student_final_grades
+        WHERE reg_no = input_reg_no
+        ORDER BY course_code;
+
+    ELSE
+        SELECT 'Student not found' AS message;
+    END IF;
+>>>>>>> 7fdad4172b784caeaa7e822ac7e5b65601e26a54
+END //
+
+DELIMITER ;
+
 DELIMITER //
 
+<<<<<<< HEAD
 CREATE PROCEDURE Individual_CA(IN s_reg_no CHAR(12),IN s_course CHAR(7))
     
  
@@ -443,8 +466,6 @@ BEGIN
       AND m.type_id IN ('QU01','QU02','QU03','ASST','MIDT','MIDP')
     GROUP BY m.reg_no, m.course_code;
 =======
-
-DELIMITER //
 CREATE PROCEDURE get_student_summary(IN input_reg_no VARCHAR(12))
 BEGIN
      IF EXISTS (SELECT 1 FROM student_final_grades WHERE reg_no = input_reg_no) THEN
@@ -460,10 +481,10 @@ BEGIN
     ELSE
         SELECT 'Student not found' AS message;
     END IF;
+>>>>>>> 7fdad4172b784caeaa7e822ac7e5b65601e26a54
 END //
 
 DELIMITER ;
-
 
 DELIMITER //
 
@@ -477,20 +498,18 @@ BEGIN
         MAX(CASE WHEN m.type_id='ASST' THEN m.mark END) AS ASST,
         MAX(CASE WHEN m.type_id='MIDT' THEN m.mark END) AS MIDT,
         MAX(CASE WHEN m.type_id='MIDP' THEN m.mark END) AS MIDP,
-        
-      
-        c.ca_marks AS total_ca
-        
+        MAX(c.ca_marks) AS total_ca
     FROM marks m
     JOIN CA_Marks c
       ON m.reg_no = c.reg_no
      AND m.course_code = c.course_code
-     
     WHERE m.reg_no = s_reg_no
       AND m.type_id IN ('QU01','QU02','QU03','ASST','MIDT','MIDP')
-      
     GROUP BY m.course_code
     ORDER BY m.course_code;
+END //
+
+DELIMITER ;
 =======
 
 
