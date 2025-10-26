@@ -277,50 +277,63 @@ END //
 
 DELIMITER ;
 =======
-DELIMITER //
-
-CREATE PROCEDURE Get_Individual_CA(IN s_reg_no CHAR(12), IN s_course CHAR(7))
-BEGIN
-    SELECT 
-        w.reg_no,
-        w.student_name,
-        s_course AS course_code,
-        CASE s_course
-            WHEN 'ENG1222' THEN w.ENG1222
-            WHEN 'ICT1212' THEN w.ICT1212
-            WHEN 'ICT1222' THEN w.ICT1222
-            WHEN 'ICT1233' THEN w.ICT1233
-            WHEN 'ICT1242' THEN w.ICT1242
-            WHEN 'ICT1253' THEN w.ICT1253
-            WHEN 'TCS1212' THEN w.TCS1212
-            WHEN 'TMS1233' THEN w.TMS1233
-        END AS ca_marks
-    FROM Whole_Batch_summary w
-    WHERE w.reg_no = s_reg_no;
-END // 
-
-DELIMITER ;                                                                      
-
 
 
 DELIMITER //
 
-CREATE PROCEDURE Get_Student_Ca_Summary(IN s_reg_no CHAR(12))
+CREATE PROCEDURE Individual_CA(IN s_reg_no CHAR(12),IN s_course CHAR(7))
+    
+ 
 BEGIN
     SELECT 
-        reg_no,
-        student_name,
-        ENG1222,
-        ICT1212,
-        ICT1222,
-        ICT1233,
-        ICT1242,
-        ICT1253,
-        TCS1212,
-        TMS1233
-    FROM  Whole_Batch_summary
-    WHERE reg_no = s_reg_no;
-END // 
+        m.reg_no,
+        m.course_code,
+        MAX(CASE WHEN m.type_id='QU01' THEN m.mark END) AS QU01,
+        MAX(CASE WHEN m.type_id='QU02' THEN m.mark END) AS QU02,
+        MAX(CASE WHEN m.type_id='QU03' THEN m.mark END) AS QU03,
+        MAX(CASE WHEN m.type_id='ASST' THEN m.mark END) AS ASST,
+        MAX(CASE WHEN m.type_id='MIDT' THEN m.mark END) AS MIDT,
+        MAX(CASE WHEN m.type_id='MIDP' THEN m.mark END) AS MIDP,
+        c.ca_marks
+    FROM marks m
+    JOIN CA_Marks c ON m.reg_no = c.reg_no AND m.course_code = c.course_code
+    WHERE m.reg_no = s_reg_no
+      AND m.course_code = s_course
+      AND m.type_id IN ('QU01','QU02','QU03','ASST','MIDT','MIDP')
+    GROUP BY m.reg_no, m.course_code;
+END //
 
-DELIMITER ;  
->>>>>>> 2113ff74fa422d7ff2d01ae3710c0956826c6ff3
+DELIMITER ;
+
+
+DELIMITER //
+
+CREATE PROCEDURE Ca_By_RegNo(IN s_reg_no CHAR(12))
+BEGIN
+    SELECT
+        m.course_code,
+        MAX(CASE WHEN m.type_id='QU01' THEN m.mark END) AS QU01,
+        MAX(CASE WHEN m.type_id='QU02' THEN m.mark END) AS QU02,
+        MAX(CASE WHEN m.type_id='QU03' THEN m.mark END) AS QU03,
+        MAX(CASE WHEN m.type_id='ASST' THEN m.mark END) AS ASST,
+        MAX(CASE WHEN m.type_id='MIDT' THEN m.mark END) AS MIDT,
+        MAX(CASE WHEN m.type_id='MIDP' THEN m.mark END) AS MIDP,
+        
+      
+        c.ca_marks AS total_ca
+        
+    FROM marks m
+    JOIN CA_Marks c
+      ON m.reg_no = c.reg_no
+     AND m.course_code = c.course_code
+     
+    WHERE m.reg_no = s_reg_no
+      AND m.type_id IN ('QU01','QU02','QU03','ASST','MIDT','MIDP')
+      
+    GROUP BY m.course_code
+    ORDER BY m.course_code;
+END //
+
+DELIMITER ;
+
+
