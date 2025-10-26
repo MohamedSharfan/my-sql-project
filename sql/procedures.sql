@@ -412,6 +412,7 @@ END //
 DELIMITER ;
 
 
+DELIMITER //
 
 
 CREATE PROCEDURE get_student_summary(IN input_reg_no VARCHAR(12))
@@ -483,7 +484,7 @@ BEGIN
 END //
 
 DELIMITER ;
-=======
+
 
 
 
