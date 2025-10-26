@@ -880,3 +880,209 @@ FROM student_final_grades sf
 JOIN course_unit cu ON sf.course_code = cu.course_code
 GROUP BY sf.course_code, cu.title
 ORDER BY sf.course_code;
+
+
+
+
+
+--adhikari
+
+
+CREATE VIEW student_gpa AS
+WITH course_grades AS (
+    SELECT 
+        sc.reg_no,
+        sc.course_code,
+        cu.credits,
+        cu.title,
+        
+        COALESCE(
+            (COALESCE(m_asst.mark, 0) * 0.1 +  
+            COALESCE(m_midt.mark, 0) * 0.2 +   
+            COALESCE(m_midp.mark, 0) * 0.15 +  
+            COALESCE(m_fint.mark, 0) * 0.3 +   
+            COALESCE(m_finp.mark, 0) * 0.2 +   
+            COALESCE(m_quiz1.mark, 0) * 0.025 + 
+            COALESCE(m_quiz2.mark, 0) * 0.025 + 
+            COALESCE(m_quiz3.mark, 0) * 0.025   
+            ), 0
+        ) AS total_marks,
+        
+        CASE 
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 85 THEN 4.00  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 80 THEN 4.00  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 75 THEN 3.70  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 70 THEN 3.30  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 65 THEN 3.00  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 60 THEN 2.70  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 55 THEN 2.30  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 50 THEN 2.00  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 45 THEN 1.70  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 40 THEN 1.30  
+            WHEN COALESCE(
+                (COALESCE(m_asst.mark, 0) * 0.1 +
+                COALESCE(m_midt.mark, 0) * 0.2 +
+                COALESCE(m_midp.mark, 0) * 0.15 +
+                COALESCE(m_fint.mark, 0) * 0.3 +
+                COALESCE(m_finp.mark, 0) * 0.2 +
+                COALESCE(m_quiz1.mark, 0) * 0.025 +
+                COALESCE(m_quiz2.mark, 0) * 0.025 +
+                COALESCE(m_quiz3.mark, 0) * 0.025
+                ), 0) >= 35 THEN 1.00  
+            ELSE 0.00  
+        END AS grade_point
+    FROM student_course sc
+    JOIN course_unit cu ON sc.course_code = cu.course_code
+    
+    LEFT JOIN marks m_asst ON sc.reg_no = m_asst.reg_no AND sc.course_code = m_asst.course_code AND m_asst.type_id = 'ASST'
+    LEFT JOIN marks m_midt ON sc.reg_no = m_midt.reg_no AND sc.course_code = m_midt.course_code AND m_midt.type_id = 'MIDT'
+    LEFT JOIN marks m_midp ON sc.reg_no = m_midp.reg_no AND sc.course_code = m_midp.course_code AND m_midp.type_id = 'MIDP'
+    LEFT JOIN marks m_fint ON sc.reg_no = m_fint.reg_no AND sc.course_code = m_fint.course_code AND m_fint.type_id = 'FINT'
+    LEFT JOIN marks m_finp ON sc.reg_no = m_finp.reg_no AND sc.course_code = m_finp.course_code AND m_finp.type_id = 'FINP'
+    LEFT JOIN marks m_quiz1 ON sc.reg_no = m_quiz1.reg_no AND sc.course_code = m_quiz1.course_code AND m_quiz1.type_id = 'QU01'
+    LEFT JOIN marks m_quiz2 ON sc.reg_no = m_quiz2.reg_no AND sc.course_code = m_quiz2.course_code AND m_quiz2.type_id = 'QU02'
+    LEFT JOIN marks m_quiz3 ON sc.reg_no = m_quiz3.reg_no AND sc.course_code = m_quiz3.course_code AND m_quiz3.type_id = 'QU03'
+),
+semester_calculations AS (
+    SELECT 
+        cg.reg_no,
+        s.year AS academic_year,
+        
+        CASE 
+            WHEN MONTH(NOW()) BETWEEN 1 AND 6 THEN 2  
+            ELSE 1  
+        END AS semester,
+        SUM(cg.grade_point * cg.credits) AS total_grade_points,
+        SUM(cg.credits) AS total_credits,
+        CASE 
+            WHEN SUM(cg.credits) > 0 THEN SUM(cg.grade_point * cg.credits) / SUM(cg.credits)
+            ELSE 0
+        END AS sgpa
+    FROM course_grades cg
+    JOIN student s ON cg.reg_no = s.reg_no
+    GROUP BY cg.reg_no, s.year, 
+        CASE 
+            WHEN MONTH(NOW()) BETWEEN 1 AND 6 THEN 2
+            ELSE 1
+        END
+),
+cumulative_calculations AS (
+    SELECT 
+        reg_no,
+        SUM(total_grade_points) AS cumulative_grade_points,
+        SUM(total_credits) AS cumulative_credits,
+        CASE 
+            WHEN SUM(total_credits) > 0 THEN SUM(total_grade_points) / SUM(total_credits)
+            ELSE 0
+        END AS cgpa
+    FROM semester_calculations
+    GROUP BY reg_no
+)
+SELECT 
+    s.reg_no,
+    u.f_name,
+    u.l_name,
+    s.year AS current_year,
+    sc.semester,
+    sc.sgpa,
+    cc.cgpa
+FROM student s
+JOIN user u ON s.reg_no = u.id
+JOIN semester_calculations sc ON s.reg_no = sc.reg_no
+JOIN cumulative_calculations cc ON s.reg_no = cc.reg_no;
+
+
+
+
+
+
