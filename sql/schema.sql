@@ -178,6 +178,7 @@ CREATE TABLE marks_normalized (
         )
 );
 ALTER TABLE marks DROP COLUMN is_medical;
+
 ALTER TABLE medical
 ADD COLUMN start_date DATE
 AFTER ref_no,
@@ -186,6 +187,7 @@ AFTER start_date;
 UPDATE medical
 SET start_date = STR_TO_DATE(SUBSTRING_INDEX(period, ' to ', 1), '%Y-%m-%d'),
     end_date = STR_TO_DATE(SUBSTRING_INDEX(period, ' to ', -1), '%Y-%m-%d');
+
 ALTER TABLE medical DROP COLUMN period;
 CREATE TABLE exam_type (
     type_id CHAR(4) PRIMARY KEY,

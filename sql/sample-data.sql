@@ -3570,6 +3570,22 @@ VALUES (
         'TG/2023/1800',
         NULL,
         'TMS1233'
+    ), 
+
+    (
+        'MARK_168',
+        0,
+        80.40,
+        86.11,
+        NULL,
+        69.03,
+        NULL,
+        67.00,
+        64.64,
+        74.78,
+        'TG/2023/1800',
+        NULL,
+        'ENG1222'
     );
 
 
@@ -3810,8 +3826,7 @@ FROM (
     AND sc.course_code = t.course_code
 WHERE t.rn <= 2
     AND sc.reg_no IS NULL;
-  AND sc.reg_no IS NULL;
-
+ 
 --SATURDAY RAZIM
  
 
