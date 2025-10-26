@@ -685,110 +685,9 @@ GROUP BY m.reg_no,
 
 
 
-CREATE OR REPLACE VIEW Whole_Batch_summary_of_ca AS
-SELECT reg_no,
-=======
 
-
-CREATE OR REPLACE VIEW Max_two_quizzes AS 
-SELECT 
-	reg_no,
-	MAX(CASE WHEN course_code = 'ENG1222' THEN avg_max END) AS ENG1222,
-    MAX(CASE WHEN course_code = 'ICT1212' THEN avg_max END) AS ICT1212,
-    MAX(CASE WHEN course_code = 'ICT1222' THEN avg_max END) AS ICT1222,
-    MAX(CASE WHEN course_code = 'ICT1233' THEN avg_max END) AS ICT1233,
-    MAX(CASE WHEN course_code = 'ICT1242' THEN avg_max END) AS ICT1242,
-    MAX(CASE WHEN course_code = 'ICT1253' THEN avg_max END) AS ICT1253,
-    MAX(CASE WHEN course_code = 'TCS1212' THEN avg_max END) AS TCS1212,
-    MAX(CASE WHEN course_code = 'TMS1233' THEN avg_max END) AS TMS1233 
-	
-FROM ( 
-	SELECT 
-		reg_no, 
-		course_code, 
-		ROUND( 
-		    ((COALESCE(MAX(CASE WHEN type_id = 'QU01' THEN mark END), 0) + 
-              COALESCE(MAX(CASE WHEN type_id = 'QU02' THEN mark END), 0) + 
-              COALESCE(MAX(CASE WHEN type_id = 'QU03' THEN mark END), 0) 
-			  - LEAST( 
-				 COALESCE(MAX(CASE WHEN type_id = 'QU01' THEN mark END), 0), 
-				 COALESCE(MAX(CASE WHEN type_id = 'QU02' THEN mark END), 0), 
-				 COALESCE(MAX(CASE WHEN type_id = 'QU03' THEN mark END), 0) 
-				 ) 
-				 )/2 
-				 ),2) AS avg_max 
-	FROM marks 
-	WHERE type_id IN('QU01','QU02','QU03') 
-	GROUP BY reg_no, course_code 
-	) AS avg_quiz 
-	GROUP BY reg_no;  
-	
-	WHEN 'ICT1253' THEN a.ICT1253
 				
-CREATE OR REPLACE VIEW CA_Marks AS 
-	SELECT 
-	   m.reg_no, 
-	   m.course_code, 
-	   
-	   CASE m.course_code 
-			WHEN 'ENG1222' THEN a.ENG1222
-			WHEN 'ICT1212' THEN a.ICT1212
-			WHEN 'ICT1222' THEN a.ICT1222
-			WHEN 'ICT1233' THEN a.ICT1233
-			WHEN 'ICT1242' THEN a.ICT1242
-		WHEN 'TCS1212' THEN a.TCS1212
-			WHEN 'TMS1233' THEN a.TMS1233
-	   END AS avg_quiz, 
-
-	   MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) AS assesment,
-	   MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) AS mid_theory, 
-       MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) AS mid_practical, 
-	
-	   ROUND( 
-	   CASE 
-		   
-        WHEN m.course_code= 'TCS1212' THEN 
-	        (a.TCS1212  * 0.10) + 
-            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
-            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.10) 
-			
-        WHEN m.course_code= 'TMS1233' THEN 
-            (a.TMS1233 * 0.10) + 
-            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.05) + 
-            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.25)
-			
-        WHEN m.course_code= 'ICT1212' THEN 
-            (a.ICT1212 * 0.10) + 
-            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.30) 
-			
-        WHEN m.course_code= 'ICT1222' THEN  
-            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
-            (MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) * 0.20) 
-			
-        WHEN m.course_code= 'ICT1233' THEN 
-            (a.ICT1233 * 0.10) + 
-            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
-            (MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) * 0.10)
-			
-        WHEN m.course_code= 'ICT1242' THEN 
-            (a.ICT1242 * 0.10) + 
-            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.05) + 
-            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.25)
-			
-        WHEN m.course_code= 'ICT1253' THEN 
-            (a.ICT1253 * 0.10) + 
-            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.10) + 
-            (MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) * 0.20)
-			
-        WHEN m.course_code= 'ENG1222' THEN 
-            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
-            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.20)
-    END,2) AS ca_marks
-	
-FROM marks m 
-JOIN Max_two_quizzes a ON m.reg_no = a.reg_no 
-WHERE m.type_id IN('ASST','MIDT','MIDP') 
-GROUP BY m.reg_no, m.course_code;  
+ 
 
 
 CREATE OR REPLACE VIEW  Whole_Batch_summary_ca AS
@@ -869,7 +768,7 @@ FROM CA_marks c
 JOIN user u ON u.id = c.reg_no
 GROUP BY reg_no, student_name
 ORDER BY reg_no;
->>>>>>> 7fdad4172b784caeaa7e822ac7e5b65601e26a54
+
 
 
 --razim
@@ -1414,4 +1313,5 @@ SELECT s.reg_no,
 FROM student s
     JOIN user u ON s.reg_no = u.id
     JOIN semester_calculations sc ON s.reg_no = sc.reg_no
+
     JOIN cumulative_calculations cc ON s.reg_no = cc.reg_no;
