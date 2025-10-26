@@ -1003,6 +1003,10 @@ VALUES ('ENG1222', 0, 'English', 'Theory', 2, 'DEP004'),
         3,
         'DEP003'
     );
+
+-- COMMENTED OUT: This manual INSERT is replaced by the dynamic INSERT below (after line 3800)
+-- This was causing only 11 students to have attendance records
+/*
 INSERT INTO Student_Course (reg_no, course_code)
 VALUES ('TG/2023/1780', 'ICT1253'),
     ('TG/2023/1780', 'ICT1242'),
@@ -1040,6 +1044,19 @@ VALUES ('TG/2023/1780', 'ICT1253'),
     ('TG/2023/1790', 'ENG1222'),
     ('TG/2023/1790', 'ICT1233'),
     ('TG/2023/1790', 'ICT1253');
+*/
+
+-- Dynamic student_course enrollment for ALL TG/2023 students
+-- INSERT INTO student_course (reg_no, course_code)
+-- SELECT s.reg_no,
+--     cu.course_code
+-- FROM student s
+--     CROSS JOIN course_unit cu
+--     LEFT JOIN student_course sc ON sc.reg_no = s.reg_no
+--     AND sc.course_code = cu.course_code
+-- WHERE s.reg_no LIKE 'TG/2023/%'
+--     AND sc.reg_no IS NULL;
+
 INSERT INTO lecturer_course (lec_id, course_code, no_of_hours)
 VALUES ('Lec_003', 'ICT1222', 5),
     ('Lec_004', 'ICT1233', 7),
