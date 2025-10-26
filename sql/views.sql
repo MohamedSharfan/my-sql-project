@@ -300,6 +300,9 @@ GROUP BY s.reg_no,
     cu.course_code,
     student_name,
     cu.title;
+
+
+
 CREATE OR REPLACE VIEW attendance_summary AS
 SELECT 
     s.reg_no,
@@ -525,167 +528,9 @@ GROUP BY m.reg_no, m.course_code;
 
 
 
-CREATE OR REPLACE VIEW student_final_grades AS
-SELECT reg_no,
-    student_name,
-    course_code,
-    course_name,
-    total_marks,
-    CASE
-        WHEN has_mc = 1 THEN 'MC'
-        WHEN total_marks >= 85 THEN 'A+'
-        WHEN total_marks >= 75 THEN 'A'
-        WHEN total_marks >= 70 THEN 'A-'
-        WHEN total_marks >= 65 THEN 'B+'
-        WHEN total_marks >= 60 THEN 'B'
-        WHEN total_marks >= 55 THEN 'B-'
-        WHEN total_marks >= 50 THEN 'C+'
-        WHEN total_marks >= 45 THEN 'C'
-        WHEN total_marks >= 40 THEN 'C-'
-        WHEN total_marks >= 35 THEN 'D'
-        ELSE 'E'
-    END AS final_grade
-FROM (
-        SELECT s.reg_no,
-            CONCAT(u.f_name, ' ', u.l_name) AS student_name,
-            cu.course_code,
-            cu.title AS course_name,
-            (
-                (
-                    (
-                        COALESCE(
-                            MAX(
-                                CASE
-                                    WHEN n.type_id = 'QU01' THEN n.mark
-                                END
-                            ),
-                            0
-                        ) + COALESCE(
-                            MAX(
-                                CASE
-                                    WHEN n.type_id = 'QU02' THEN n.mark
-                                END
-                            ),
-                            0
-                        ) + COALESCE(
-                            MAX(
-                                CASE
-                                    WHEN n.type_id = 'QU03' THEN n.mark
-                                END
-                            ),
-                            0
-                        )
-                    ) - LEAST(
-                        COALESCE(
-                            MAX(
-                                CASE
-                                    WHEN n.type_id = 'QU01' THEN n.mark
-                                END
-                            ),
-                            0
-                        ),
-                        COALESCE(
-                            MAX(
-                                CASE
-                                    WHEN n.type_id = 'QU02' THEN n.mark
-                                END
-                            ),
-                            0
-                        ),
-                        COALESCE(
-                            MAX(
-                                CASE
-                                    WHEN n.type_id = 'QU03' THEN n.mark
-                                END
-                            ),
-                            0
-                        )
-                    )
-                ) / 2 * 0.10 + COALESCE(
-                    MAX(
-                        CASE
-                            WHEN n.type_id = 'ASST' THEN n.mark
-                        END
-                    ),
-                    0
-                ) * 0.10 + CASE
-                    WHEN MAX(
-                        CASE
-                            WHEN n.type_id = 'MIDP' THEN n.mark
-                        END
-                    ) IS NOT NULL THEN COALESCE(
-                        MAX(
-                            CASE
-                                WHEN n.type_id = 'MIDT' THEN n.mark
-                            END
-                        ),
-                        0
-                    ) * 0.10 + COALESCE(
-                        MAX(
-                            CASE
-                                WHEN n.type_id = 'MIDP' THEN n.mark
-                            END
-                        ),
-                        0
-                    ) * 0.10
-                    ELSE COALESCE(
-                        MAX(
-                            CASE
-                                WHEN n.type_id = 'MIDT' THEN n.mark
-                            END
-                        ),
-                        0
-                    ) * 0.20
-                END + CASE
-                    WHEN MAX(
-                        CASE
-                            WHEN n.type_id = 'FINP' THEN n.mark
-                        END
-                    ) IS NOT NULL THEN COALESCE(
-                        MAX(
-                            CASE
-                                WHEN n.type_id = 'FINT' THEN n.mark
-                            END
-                        ),
-                        0
-                    ) * 0.40 + COALESCE(
-                        MAX(
-                            CASE
-                                WHEN n.type_id = 'FINP' THEN n.mark
-                            END
-                        ),
-                        0
-                    ) * 0.20
-                    ELSE COALESCE(
-                        MAX(
-                            CASE
-                                WHEN n.type_id = 'FINT' THEN n.mark
-                            END
-                        ),
-                        0
-                    ) * 0.60
-                END
-            ) AS total_marks,
-            CASE
-                WHEN EXISTS (
-                    SELECT 1
-                    FROM exam_type e
-                        JOIN medical md ON md.reg_no = s.reg_no
-                    WHERE md.status = 'Approved'
-                        AND e.exam_date BETWEEN md.start_date AND md.end_date
-                        AND e.type_id IN ('MIDT', 'MIDP', 'FINT', 'FINP')
-                ) THEN 1
-                ELSE 0
-            END AS has_mc
-        FROM marks n
-            JOIN student s ON n.reg_no = s.reg_no
-            JOIN user u ON s.reg_no = u.id
-            JOIN course_unit cu ON n.course_code = cu.course_code
-        GROUP BY s.reg_no,
-            cu.course_code
-    ) AS sub;
 
-CREATE OR REPLACE VIEW  Whole_Batch_summary AS
+
+CREATE OR REPLACE VIEW  Whole_Batch_summary_of_ca AS
 SELECT
     reg_no,
     CONCAT(u.f_name, ' ', u.l_name) AS student_name,
@@ -702,6 +547,8 @@ JOIN user u ON u.id = c.reg_no
 GROUP BY reg_no, student_name
 ORDER BY reg_no;
 
+
+--razim
 
 
 CREATE OR REPLACE VIEW student_final_grades AS
@@ -808,9 +655,6 @@ SELECT
     CONCAT(u.f_name, ' ', u.l_name) AS student_name,
     c.course_code AS course_code,
     c.title AS course_name,
-    c.type AS course_type,
-    MAX(CASE WHEN f.type_id = 'FINT' THEN f.mark END) AS FINT,
-    MAX(CASE WHEN f.type_id = 'FINP' THEN f.mark END) AS FINP,
     CASE 
         WHEN c.type = 'Theory' AND MAX(CASE WHEN f.type_id = 'FINT' THEN f.mark END) >= 35 THEN 'PASS'
         WHEN c.type = 'Practical' AND MAX(CASE WHEN f.type_id = 'FINP' THEN f.mark END) >= 35 THEN 'PASS'
@@ -823,6 +667,24 @@ JOIN user u ON s.reg_no = u.id
 JOIN marks f ON s.reg_no = f.reg_no
 JOIN course_unit c ON f.course_code = c.course_code
 GROUP BY s.reg_no, u.f_name, u.l_name, c.course_code, c.title, c.type;
+
+
+
+CREATE OR REPLACE VIEW end_exam_status_pivot AS
+SELECT 
+    reg_no,
+    student_name,
+    MAX(CASE WHEN course_code = 'ENG1222' THEN end_exam_status END) AS ENG1222,
+    MAX(CASE WHEN course_code = 'ICT1212' THEN end_exam_status END) AS ICT1212,
+    MAX(CASE WHEN course_code = 'ICT1222' THEN end_exam_status END) AS ICT1222,
+    MAX(CASE WHEN course_code = 'ICT1233' THEN end_exam_status END) AS ICT1233,
+    MAX(CASE WHEN course_code = 'ICT1242' THEN end_exam_status END) AS ICT1242,
+    MAX(CASE WHEN course_code = 'ICT1253' THEN end_exam_status END) AS ICT1253,
+    MAX(CASE WHEN course_code = 'TCS1212' THEN end_exam_status END) AS TCS1212,
+    MAX(CASE WHEN course_code = 'TMS1233' THEN end_exam_status END) AS TMS1233
+FROM end_exam_status
+GROUP BY reg_no, student_name;
+
 
 
 

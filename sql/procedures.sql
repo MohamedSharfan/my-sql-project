@@ -244,7 +244,6 @@ DELIMITER ;
 
 
 
-DROP PROCEDURE IF EXISTS get_course_summary;
 
 DELIMITER //
 
@@ -281,7 +280,6 @@ DELIMITER ;
 
 
 
-DROP PROCEDURE IF EXISTS get_student_summary;
 
 DELIMITER //
 
