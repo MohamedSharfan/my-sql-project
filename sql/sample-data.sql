@@ -1003,43 +1003,9 @@ VALUES ('ENG1222', 0, 'English', 'Theory', 2, 'DEP004'),
         3,
         'DEP003'
     );
-INSERT INTO Student_Course (reg_no, course_code)
-VALUES ('TG/2023/1780', 'ICT1253'),
-    ('TG/2023/1780', 'ICT1242'),
-    ('TG/2023/1781', 'ENG1222'),
-    ('TG/2023/1781', 'ICT1212'),
-    ('TG/2023/1781', 'ICT1222'),
-    ('TG/2023/1782', 'ENG1222'),
-    ('TG/2023/1782', 'ICT1212'),
-    ('TG/2023/1782', 'ICT1233'),
-    ('TG/2023/1782', 'TCS1212'),
-    ('TG/2023/1783', 'ICT1222'),
-    ('TG/2023/1783', 'ICT1253'),
-    ('TG/2023/1783', 'TMS1233'),
-    ('TG/2023/1784', 'ICT1212'),
-    ('TG/2023/1784', 'ICT1222'),
-    ('TG/2023/1784', 'ICT1233'),
-    ('TG/2023/1784', 'ICT1242'),
-    ('TG/2023/1785', 'ENG1222'),
-    ('TG/2023/1785', 'TCS1212'),
-    ('TG/2023/1785', 'ICT1242'),
-    ('TG/2023/1785', 'ICT1253'),
-    ('TG/2023/1786', 'ICT1212'),
-    ('TG/2023/1786', 'ICT1233'),
-    ('TG/2023/1786', 'TMS1233'),
-    ('TG/2023/1786', 'ICT1253'),
-    ('TG/2023/1787', 'ENG1222'),
-    ('TG/2023/1787', 'ICT1222'),
-    ('TG/2023/1787', 'ICT1233'),
-    ('TG/2023/1788', 'ICT1242'),
-    ('TG/2023/1788', 'ICT1253'),
-    ('TG/2023/1788', 'TCS1212'),
-    ('TG/2023/1789', 'ICT1212'),
-    ('TG/2023/1789', 'ICT1222'),
-    ('TG/2023/1789', 'TMS1233'),
-    ('TG/2023/1790', 'ENG1222'),
-    ('TG/2023/1790', 'ICT1233'),
-    ('TG/2023/1790', 'ICT1253');
+
+
+
 INSERT INTO lecturer_course (lec_id, course_code, no_of_hours)
 VALUES ('Lec_003', 'ICT1222', 5),
     ('Lec_004', 'ICT1233', 7),
@@ -3590,7 +3556,41 @@ VALUES (
 
 
 
+-- razim
 
+INSERT INTO student_course (reg_no, course_code)
+SELECT s.reg_no,
+    cu.course_code
+FROM student s
+    CROSS JOIN course_unit cu
+    LEFT JOIN student_course sc ON sc.reg_no = s.reg_no
+    AND sc.course_code = cu.course_code
+WHERE s.reg_no LIKE 'TG/2023/%'
+    AND sc.reg_no IS NULL;
+
+INSERT INTO student_course (reg_no, course_code)
+SELECT t.reg_no,
+    t.course_code
+FROM (
+        SELECT s.reg_no,
+            cu.course_code,
+            ROW_NUMBER() OVER (
+                PARTITION BY s.reg_no
+                ORDER BY RAND()
+            ) AS rn
+        FROM student s
+            CROSS JOIN course_unit cu
+        WHERE s.reg_no LIKE 'TG/2022/%'
+    ) AS t
+    LEFT JOIN student_course sc ON sc.reg_no = t.reg_no
+    AND sc.course_code = t.course_code
+WHERE t.rn <= 2
+    AND sc.reg_no IS NULL;
+
+
+
+
+--sharfan
 SET @att_no = 1000;
 SET @semester_start = '2025-02-03';
 
@@ -3648,6 +3648,9 @@ WHERE
     (cu.type = 'Theory' AND tp.session = 1) OR
     (cu.type = 'Practical' AND tp.session = 2) OR
     (cu.type = 'Both');
+ 
+
+
 
 
 
@@ -3798,35 +3801,10 @@ VALUES ('ASST', 'Assessment'),
 
 
 
--- razim
-INSERT INTO student_course (reg_no, course_code)
-SELECT s.reg_no,
-    cu.course_code
-FROM student s
-    CROSS JOIN course_unit cu
-    LEFT JOIN student_course sc ON sc.reg_no = s.reg_no
-    AND sc.course_code = cu.course_code
-WHERE s.reg_no LIKE 'TG/2023/%'
-    AND sc.reg_no IS NULL;
-INSERT INTO student_course (reg_no, course_code)
-SELECT t.reg_no,
-    t.course_code
-FROM (
-        SELECT s.reg_no,
-            cu.course_code,
-            ROW_NUMBER() OVER (
-                PARTITION BY s.reg_no
-                ORDER BY RAND()
-            ) AS rn
-        FROM student s
-            CROSS JOIN course_unit cu
-        WHERE s.reg_no LIKE 'TG/2022/%'
-    ) AS t
-    LEFT JOIN student_course sc ON sc.reg_no = t.reg_no
-    AND sc.course_code = t.course_code
-WHERE t.rn <= 2
-    AND sc.reg_no IS NULL;
- 
+
+
+
+
 --SATURDAY RAZIM
  
 
