@@ -443,6 +443,8 @@ BEGIN
       AND m.type_id IN ('QU01','QU02','QU03','ASST','MIDT','MIDP')
     GROUP BY m.reg_no, m.course_code;
 =======
+
+DELIMITER //
 CREATE PROCEDURE get_student_summary(IN input_reg_no VARCHAR(12))
 BEGIN
      IF EXISTS (SELECT 1 FROM student_final_grades WHERE reg_no = input_reg_no) THEN
