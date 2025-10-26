@@ -7,7 +7,7 @@ BEGIN
     SELECT *
     FROM attendance_summary_by_course
     WHERE course_code = p_course_code;
-END //
+END //      
 
 DELIMITER ;
 
