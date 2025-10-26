@@ -410,6 +410,9 @@ BEGIN
 END //
 
 DELIMITER ;
+<<<<<<< HEAD
+=======
+=======
 
 
 
@@ -439,13 +442,7 @@ BEGIN
       AND m.course_code = s_course
       AND m.type_id IN ('QU01','QU02','QU03','ASST','MIDT','MIDP')
     GROUP BY m.reg_no, m.course_code;
-END //
-
-DELIMITER ;
-
-DELIMITER //
-
-    
+=======
 CREATE PROCEDURE get_student_summary(IN input_reg_no VARCHAR(12))
 BEGIN
      IF EXISTS (SELECT 1 FROM student_final_grades WHERE reg_no = input_reg_no) THEN
@@ -492,9 +489,9 @@ BEGIN
       
     GROUP BY m.course_code
     ORDER BY m.course_code;
-END //
+=======
 
-DELIMITER ;
+
 
 
 --adhikari

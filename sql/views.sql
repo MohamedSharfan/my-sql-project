@@ -723,7 +723,8 @@ FROM (
 	) AS avg_quiz 
 	GROUP BY reg_no;  
 	
-	
+	WHEN 'ICT1253' THEN a.ICT1253
+				
 CREATE OR REPLACE VIEW CA_Marks AS 
 	SELECT 
 	   m.reg_no, 
@@ -735,8 +736,7 @@ CREATE OR REPLACE VIEW CA_Marks AS
 			WHEN 'ICT1222' THEN a.ICT1222
 			WHEN 'ICT1233' THEN a.ICT1233
 			WHEN 'ICT1242' THEN a.ICT1242
-			WHEN 'ICT1253' THEN a.ICT1253
-			WHEN 'TCS1212' THEN a.TCS1212
+		WHEN 'TCS1212' THEN a.TCS1212
 			WHEN 'TMS1233' THEN a.TMS1233
 	   END AS avg_quiz, 
 
@@ -851,6 +851,7 @@ ORDER BY c.reg_no;
 
 
 
+<<<<<<< Updated upstream
 CREATE OR REPLACE VIEW  Whole_Batch_summary_of_ca AS
 SELECT
     reg_no,
@@ -901,6 +902,8 @@ GROUP BY reg_no,
     student_name
 ORDER BY reg_no;
 
+=======
+>>>>>>> Stashed changes
 
 
 --razim
