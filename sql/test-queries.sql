@@ -18,8 +18,8 @@ CALL get_student_summary('TG/2023/1786');
 CALL Ca_By_RegNo('TG/2023/1787'); 
 CALL Individual_CA('TG/2023/1787','ICT1233');
 
-
-
+--adhikari
+CALL StudentGPAWithGuardians('TG/2023/1780');
 
 -- VIEWS
 
@@ -41,3 +41,4 @@ SELECT * FROM student_gpa;
 SELECT * FROM student_grades_pivot_view_student_version;
 SELECT * FROM whole_batch_summary;
 SELECT * FROM whole_batch_summary_of_ca;
+
