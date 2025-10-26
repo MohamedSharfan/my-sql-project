@@ -410,20 +410,15 @@ BEGIN
 END //
 
 DELIMITER ;
-<<<<<<< HEAD
-=======
-=======
 
 
 
 
 
->>>>>>> 7fdad4172b784caeaa7e822ac7e5b65601e26a54
 
 
 DELIMITER //
 
-<<<<<<< HEAD
 CREATE PROCEDURE Individual_CA(IN s_reg_no CHAR(12),IN s_course CHAR(7))
     
  
@@ -444,7 +439,13 @@ BEGIN
       AND m.course_code = s_course
       AND m.type_id IN ('QU01','QU02','QU03','ASST','MIDT','MIDP')
     GROUP BY m.reg_no, m.course_code;
-=======
+END //
+
+DELIMITER ;
+
+DELIMITER //
+
+    
 CREATE PROCEDURE get_student_summary(IN input_reg_no VARCHAR(12))
 BEGIN
      IF EXISTS (SELECT 1 FROM student_final_grades WHERE reg_no = input_reg_no) THEN
@@ -460,13 +461,11 @@ BEGIN
     ELSE
         SELECT 'Student not found' AS message;
     END IF;
->>>>>>> 7fdad4172b784caeaa7e822ac7e5b65601e26a54
 END //
 
 DELIMITER ;
 
 
-<<<<<<< HEAD
 DELIMITER //
 
 CREATE PROCEDURE Ca_By_RegNo(IN s_reg_no CHAR(12))
@@ -493,9 +492,9 @@ BEGIN
       
     GROUP BY m.course_code
     ORDER BY m.course_code;
-=======
+END //
 
-
+DELIMITER ;
 
 
 --adhikari
@@ -715,16 +714,12 @@ BEGIN
     JOIN cumulative_calculations cc ON s.reg_no = cc.reg_no
     LEFT JOIN guardian_info gi ON s.reg_no = gi.reg_no
     WHERE s.reg_no = student_reg_no;
->>>>>>> 7fdad4172b784caeaa7e822ac7e5b65601e26a54
 END //
 
 DELIMITER ;
 
-<<<<<<< HEAD
-=======
 
 
 
 
->>>>>>> 7fdad4172b784caeaa7e822ac7e5b65601e26a54
 

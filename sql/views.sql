@@ -343,6 +343,9 @@ GROUP BY s.reg_no,
     cu.title
 ORDER BY a.course_code,
     s.reg_no;
+
+
+    
 CREATE OR REPLACE VIEW attendance_detail_by_course AS
 SELECT a.course_code,
     cu.title AS course_name,
@@ -428,7 +431,11 @@ ORDER BY a.course_code,
     a.session_type,
     s.reg_no,
     a.week_no;
-<<<<<<< HEAD
+
+
+
+
+
 CREATE OR REPLACE VIEW Max_two_quizzes AS
 SELECT reg_no,
     MAX(
@@ -534,6 +541,10 @@ FROM (
             course_code
     ) AS avg_quiz
 GROUP BY reg_no;
+
+
+
+
 CREATE OR REPLACE VIEW CA_Marks AS
 SELECT m.reg_no,
     m.course_code,
@@ -671,6 +682,9 @@ FROM marks m
 WHERE m.type_id IN('ASST', 'MIDT', 'MIDP')
 GROUP BY m.reg_no,
     m.course_code;
+
+
+
 CREATE OR REPLACE VIEW Whole_Batch_summary_of_ca AS
 SELECT reg_no,
 =======
@@ -886,12 +900,9 @@ FROM CA_marks c
 GROUP BY reg_no,
     student_name
 ORDER BY reg_no;
-<<<<<<< HEAD
-=======
->>>>>>> 7fdad4172b784caeaa7e822ac7e5b65601e26a54
 
 
->>>>>>> 597be48929cd1183c02ab96463f168c1a99e44bd
+
 --razim
 CREATE OR REPLACE VIEW student_final_grades AS WITH marks_pivot AS (
         SELECT reg_no,
