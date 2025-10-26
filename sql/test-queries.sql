@@ -19,7 +19,8 @@ CALL get_student_summary('TG/2023/1786');
 CALL Ca_By_RegNo('TG/2023/1787'); 
 CALL Individual_CA('TG/2023/1787','ICT1233');
 
-
+--adhikari
+CALL StudentGPAWithGuardians('TG/2023/1780');
 
 
 -- VIEWS
