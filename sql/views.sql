@@ -851,59 +851,6 @@ ORDER BY c.reg_no;
 
 
 
-<<<<<<< Updated upstream
-CREATE OR REPLACE VIEW  Whole_Batch_summary_of_ca AS
-SELECT
-    reg_no,
-    CONCAT(u.f_name, ' ', u.l_name) AS student_name,
-    MAX(
-        CASE
-            WHEN course_code = 'ENG1222' THEN ca_marks
-        END
-    ) AS ENG1222,
-    MAX(
-        CASE
-            WHEN course_code = 'ICT1212' THEN ca_marks
-        END
-    ) AS ICT1212,
-    MAX(
-        CASE
-            WHEN course_code = 'ICT1222' THEN ca_marks
-        END
-    ) AS ICT1222,
-    MAX(
-        CASE
-            WHEN course_code = 'ICT1233' THEN ca_marks
-        END
-    ) AS ICT1233,
-    MAX(
-        CASE
-            WHEN course_code = 'ICT1242' THEN ca_marks
-        END
-    ) AS ICT1242,
-    MAX(
-        CASE
-            WHEN course_code = 'ICT1253' THEN ca_marks
-        END
-    ) AS ICT1253,
-    MAX(
-        CASE
-            WHEN course_code = 'TCS1212' THEN ca_marks
-        END
-    ) AS TCS1212,
-    MAX(
-        CASE
-            WHEN course_code = 'TMS1233' THEN ca_marks
-        END
-    ) AS TMS1233
-FROM CA_marks c
-    JOIN user u ON u.id = c.reg_no
-GROUP BY reg_no,
-    student_name
-ORDER BY reg_no;
-
-=======
->>>>>>> Stashed changes
 
 
 --razim
@@ -1046,6 +993,8 @@ FROM student s
     AND ts.course_code = cu.course_code
     LEFT JOIN attendance_calc att ON att.reg_no = s.reg_no
     AND att.course_code = cu.course_code;
+
+
 CREATE OR REPLACE VIEW end_exam_status AS
 SELECT s.reg_no AS reg_no,
     CONCAT(u.f_name, ' ', u.l_name) AS student_name,
@@ -1276,6 +1225,25 @@ FROM student_final_grades sf
 GROUP BY sf.course_code,
     cu.title
 ORDER BY sf.course_code;
+
+CREATE OR REPLACE VIEW student_grades_pivot_view_summary AS
+SELECT
+    s.reg_no,
+    CONCAT(u.f_name, ' ', u.l_name) AS student_name,
+    MAX(CASE WHEN sf.course_code = 'ENG1222' THEN sf.final_grade END) AS ENG1222,
+    MAX(CASE WHEN sf.course_code = 'ICT1222' THEN sf.final_grade END) AS ICT1222,
+    MAX(CASE WHEN sf.course_code = 'ICT1242' THEN sf.final_grade END) AS ICT1242,
+    MAX(CASE WHEN sf.course_code = 'ICT1233' THEN sf.final_grade END) AS ICT1233,
+    MAX(CASE WHEN sf.course_code = 'ICT1212' THEN sf.final_grade END) AS ICT1212,
+    MAX(CASE WHEN sf.course_code = 'TCS1212' THEN sf.final_grade END) AS TCS1212,
+    MAX(CASE WHEN sf.course_code = 'ICT1253' THEN sf.final_grade END) AS ICT1253,
+    MAX(CASE WHEN sf.course_code = 'TMS1233' THEN sf.final_grade END) AS TMS1233
+FROM student_final_grades sf
+JOIN student s ON sf.reg_no = s.reg_no
+JOIN user u ON s.reg_no = u.id
+GROUP BY s.reg_no, student_name
+ORDER BY s.reg_no;
+
 --adhikari
 CREATE VIEW student_gpa AS WITH course_grades AS (
     SELECT sc.reg_no,
