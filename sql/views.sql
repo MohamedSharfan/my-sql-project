@@ -428,6 +428,7 @@ ORDER BY a.course_code,
     a.session_type,
     s.reg_no,
     a.week_no;
+<<<<<<< HEAD
 CREATE OR REPLACE VIEW Max_two_quizzes AS
 SELECT reg_no,
     MAX(
@@ -672,6 +673,173 @@ GROUP BY m.reg_no,
     m.course_code;
 CREATE OR REPLACE VIEW Whole_Batch_summary_of_ca AS
 SELECT reg_no,
+=======
+
+
+CREATE OR REPLACE VIEW Max_two_quizzes AS 
+SELECT 
+	reg_no,
+	MAX(CASE WHEN course_code = 'ENG1222' THEN avg_max END) AS ENG1222,
+    MAX(CASE WHEN course_code = 'ICT1212' THEN avg_max END) AS ICT1212,
+    MAX(CASE WHEN course_code = 'ICT1222' THEN avg_max END) AS ICT1222,
+    MAX(CASE WHEN course_code = 'ICT1233' THEN avg_max END) AS ICT1233,
+    MAX(CASE WHEN course_code = 'ICT1242' THEN avg_max END) AS ICT1242,
+    MAX(CASE WHEN course_code = 'ICT1253' THEN avg_max END) AS ICT1253,
+    MAX(CASE WHEN course_code = 'TCS1212' THEN avg_max END) AS TCS1212,
+    MAX(CASE WHEN course_code = 'TMS1233' THEN avg_max END) AS TMS1233 
+	
+FROM ( 
+	SELECT 
+		reg_no, 
+		course_code, 
+		ROUND( 
+		    ((COALESCE(MAX(CASE WHEN type_id = 'QU01' THEN mark END), 0) + 
+              COALESCE(MAX(CASE WHEN type_id = 'QU02' THEN mark END), 0) + 
+              COALESCE(MAX(CASE WHEN type_id = 'QU03' THEN mark END), 0) 
+			  - LEAST( 
+				 COALESCE(MAX(CASE WHEN type_id = 'QU01' THEN mark END), 0), 
+				 COALESCE(MAX(CASE WHEN type_id = 'QU02' THEN mark END), 0), 
+				 COALESCE(MAX(CASE WHEN type_id = 'QU03' THEN mark END), 0) 
+				 ) 
+				 )/2 
+				 ),2) AS avg_max 
+	FROM marks 
+	WHERE type_id IN('QU01','QU02','QU03') 
+	GROUP BY reg_no, course_code 
+	) AS avg_quiz 
+	GROUP BY reg_no;  
+	
+	
+CREATE OR REPLACE VIEW CA_Marks AS 
+	SELECT 
+	   m.reg_no, 
+	   m.course_code, 
+	   
+	   CASE m.course_code 
+			WHEN 'ENG1222' THEN a.ENG1222
+			WHEN 'ICT1212' THEN a.ICT1212
+			WHEN 'ICT1222' THEN a.ICT1222
+			WHEN 'ICT1233' THEN a.ICT1233
+			WHEN 'ICT1242' THEN a.ICT1242
+			WHEN 'ICT1253' THEN a.ICT1253
+			WHEN 'TCS1212' THEN a.TCS1212
+			WHEN 'TMS1233' THEN a.TMS1233
+	   END AS avg_quiz, 
+
+	   MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) AS assesment,
+	   MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) AS mid_theory, 
+       MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) AS mid_practical, 
+	
+	   ROUND( 
+	   CASE 
+		   
+        WHEN m.course_code= 'TCS1212' THEN 
+	        (a.TCS1212  * 0.10) + 
+            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
+            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.10) 
+			
+        WHEN m.course_code= 'TMS1233' THEN 
+            (a.TMS1233 * 0.10) + 
+            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.05) + 
+            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.25)
+			
+        WHEN m.course_code= 'ICT1212' THEN 
+            (a.ICT1212 * 0.10) + 
+            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.30) 
+			
+        WHEN m.course_code= 'ICT1222' THEN  
+            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
+            (MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) * 0.20) 
+			
+        WHEN m.course_code= 'ICT1233' THEN 
+            (a.ICT1233 * 0.10) + 
+            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
+            (MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) * 0.10)
+			
+        WHEN m.course_code= 'ICT1242' THEN 
+            (a.ICT1242 * 0.10) + 
+            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.05) + 
+            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.25)
+			
+        WHEN m.course_code= 'ICT1253' THEN 
+            (a.ICT1253 * 0.10) + 
+            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.10) + 
+            (MAX(CASE WHEN m.type_id= 'MIDP' THEN m.mark END) * 0.20)
+			
+        WHEN m.course_code= 'ENG1222' THEN 
+            (MAX(CASE WHEN m.type_id= 'ASST' THEN m.mark END) * 0.20) + 
+            (MAX(CASE WHEN m.type_id= 'MIDT' THEN m.mark END) * 0.20)
+    END,2) AS ca_marks
+	
+FROM marks m 
+JOIN Max_two_quizzes a ON m.reg_no = a.reg_no 
+WHERE m.type_id IN('ASST','MIDT','MIDP') 
+GROUP BY m.reg_no, m.course_code;  
+
+
+CREATE OR REPLACE VIEW  Whole_Batch_summary AS
+SELECT
+    reg_no,
+    CONCAT(u.f_name, ' ', u.l_name) AS student_name,
+    MAX(CASE WHEN course_code = 'ENG1222' THEN ca_marks END) AS ENG1222,
+    MAX(CASE WHEN course_code = 'ICT1212' THEN ca_marks END) AS ICT1212,
+    MAX(CASE WHEN course_code = 'ICT1222' THEN ca_marks END) AS ICT1222,
+    MAX(CASE WHEN course_code = 'ICT1233' THEN ca_marks END) AS ICT1233,
+    MAX(CASE WHEN course_code = 'ICT1242' THEN ca_marks END) AS ICT1242,
+    MAX(CASE WHEN course_code = 'ICT1253' THEN ca_marks END) AS ICT1253,
+    MAX(CASE WHEN course_code = 'TCS1212' THEN ca_marks END) AS TCS1212,
+    MAX(CASE WHEN course_code = 'TMS1233' THEN ca_marks END) AS TMS1233
+FROM CA_marks c
+JOIN user u ON u.id = c.reg_no
+GROUP BY reg_no
+ORDER BY reg_no;                     
+
+
+CREATE OR REPLACE VIEW CA_Eligibility AS
+SELECT
+    c.reg_no,
+    MAX(CASE WHEN c.course_code = 'ENG1222' THEN c.eligibility END) AS ENG1222,
+    MAX(CASE WHEN c.course_code = 'ICT1212' THEN c.eligibility END) AS ICT1212,
+    MAX(CASE WHEN c.course_code = 'ICT1222' THEN c.eligibility END) AS ICT1222,
+    MAX(CASE WHEN c.course_code = 'ICT1233' THEN c.eligibility END) AS ICT1233,
+    MAX(CASE WHEN c.course_code = 'ICT1242' THEN c.eligibility END) AS ICT1242,
+    MAX(CASE WHEN c.course_code = 'ICT1253' THEN c.eligibility END) AS ICT1253,
+    MAX(CASE WHEN c.course_code = 'TCS1212' THEN c.eligibility END) AS TCS1212,
+    MAX(CASE WHEN c.course_code = 'TMS1233' THEN c.eligibility END) AS TMS1233
+FROM (
+    SELECT
+        m.reg_no,
+        m.course_code,
+        CASE
+            WHEN EXISTS (
+                SELECT 1
+                FROM medical me
+                JOIN course_exam_dates ce
+                  ON ce.course_code = m.course_code
+                WHERE me.reg_no = m.reg_no
+                  AND me.status = 'Approved'
+                  AND me.start_date <= ce.exam_date
+                  AND me.end_date >= ce.exam_date
+            ) THEN 'MC'
+            WHEN m.ca_marks >= 16 THEN 'Eligible'
+            ELSE 'Not Eligible'
+        END AS eligibility
+    FROM ca_marks m
+) AS c
+GROUP BY c.reg_no
+ORDER BY c.reg_no;	
+
+
+
+
+
+
+
+
+
+CREATE OR REPLACE VIEW  Whole_Batch_summary_of_ca AS
+SELECT
+    reg_no,
     CONCAT(u.f_name, ' ', u.l_name) AS student_name,
     MAX(
         CASE
@@ -718,6 +886,12 @@ FROM CA_marks c
 GROUP BY reg_no,
     student_name
 ORDER BY reg_no;
+<<<<<<< HEAD
+=======
+>>>>>>> 7fdad4172b784caeaa7e822ac7e5b65601e26a54
+
+
+>>>>>>> 597be48929cd1183c02ab96463f168c1a99e44bd
 --razim
 CREATE OR REPLACE VIEW student_final_grades AS WITH marks_pivot AS (
         SELECT reg_no,
