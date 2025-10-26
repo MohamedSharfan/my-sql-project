@@ -751,26 +751,6 @@ ORDER BY c.reg_no;
 
 
 
-
-CREATE OR REPLACE VIEW  Whole_Batch_summary_of_ca AS
-SELECT
-    reg_no,
-    CONCAT(u.f_name, ' ', u.l_name) AS student_name,
-    MAX(CASE WHEN course_code = 'ENG1222' THEN ca_marks END) AS ENG1222,
-    MAX(CASE WHEN course_code = 'ICT1212' THEN ca_marks END) AS ICT1212,
-    MAX(CASE WHEN course_code = 'ICT1222' THEN ca_marks END) AS ICT1222,
-    MAX(CASE WHEN course_code = 'ICT1233' THEN ca_marks END) AS ICT1233,
-    MAX(CASE WHEN course_code = 'ICT1242' THEN ca_marks END) AS ICT1242,
-    MAX(CASE WHEN course_code = 'ICT1253' THEN ca_marks END) AS ICT1253,
-    MAX(CASE WHEN course_code = 'TCS1212' THEN ca_marks END) AS TCS1212,
-    MAX(CASE WHEN course_code = 'TMS1233' THEN ca_marks END) AS TMS1233
-FROM CA_marks c
-JOIN user u ON u.id = c.reg_no
-GROUP BY reg_no, student_name
-ORDER BY reg_no;
-
-
-
 --razim
 CREATE OR REPLACE VIEW student_final_grades AS WITH marks_pivot AS (
         SELECT reg_no,
@@ -1315,3 +1295,4 @@ FROM student s
     JOIN semester_calculations sc ON s.reg_no = sc.reg_no
 
     JOIN cumulative_calculations cc ON s.reg_no = cc.reg_no;
+
