@@ -1,4 +1,4 @@
-----Sharfan 
+--Sharfan 
 CREATE OR REPLACE VIEW attendance_summary_by_student AS
 SELECT s.reg_no,
     CONCAT(u.f_name, ' ', u.l_name) AS student_name,
@@ -69,10 +69,20 @@ GROUP BY s.reg_no,
 CREATE OR REPLACE VIEW attendance_summary_by_course AS
 SELECT cu.course_code,
     cu.title,
-    cu.session_hour,
+    (
+    CASE
+        WHEN cu.type = 'Both' THEN 2
+        ELSE cu.session_hour
+    END
+    ) AS session_hours,
     a.session_type,
     COUNT(DISTINCT a.reg_no) AS total_students,
-    (15 * cu.session_hour) AS total_hours_per_student,
+    (
+    CASE
+        WHEN cu.type = 'Both' THEN 30
+        ELSE 15 * cu.session_hour
+    END
+    ) AS total_hours_per_student,
     SUM(
         CASE
             WHEN a.status = 'Present' THEN cu.session_hour
@@ -99,6 +109,9 @@ GROUP BY cu.course_code,
     cu.title,
     cu.session_hour,
     a.session_type;
+
+
+
 
 
 
